@@ -27,7 +27,7 @@ const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (Student) {
         return res.status(400).json({ msg: 'El alumno ya existe, verificar cedula y nombre completo' });
     }
-    //GUARDAR USUARIO
+    //GUARDAR Alumno
     const newStudent = new alumno_1.default(req.body);
     yield newStudent.save();
     return res.status(201).json({ newStudent, msg: 'Alumno registrado correctamente' });
@@ -46,11 +46,13 @@ const SearchStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     return res.status(201).json(Students);
 });
 exports.SearchStudent = SearchStudent;
-//Buscar alumnos por cedula o por nombre
+//Buscar alumnos por Grado
 const SearchStudentByGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.params.grade);
+    console.log(req.params.section);
     const Students = yield alumno_1.default.find({ $and: [
-            { grado: req.body.grado },
-            { seccion: req.body.seccion }
+            { grado: req.params.grade },
+            { seccion: req.params.section }
         ] });
     if (Students.length === 0) {
         return res.status(400).json({ msg: "no hay alumnos en esa seccion" });

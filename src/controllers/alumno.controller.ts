@@ -16,7 +16,7 @@ export const NewStudent = async (req: Request,res: Response): Promise<Response> 
     if(Student){
         return res.status(400).json({msg:'El alumno ya existe, verificar cedula y nombre completo'});
     }
-    //GUARDAR USUARIO
+    //GUARDAR Alumno
     const newStudent = new alumnos(req.body);
     await newStudent.save();
     return res.status(201).json({newStudent,msg:'Alumno registrado correctamente'});
@@ -35,11 +35,13 @@ export const SearchStudent = async (req : Request, res: Response):Promise<Respon
     return res.status(201).json(Students)
   }
 
-  //Buscar alumnos por cedula o por nombre
+  //Buscar alumnos por Grado
 export const SearchStudentByGrade = async (req : Request, res: Response):Promise<Response>=>{
+    console.log(req.params.grade);
+    console.log(req.params.section);
     const Students = await alumnos.find({$and: [
-        {grado: req.body.grado},
-        {seccion: req.body.seccion}
+        {grado: req.params.grade},
+        {seccion: req.params.section}
     ]});
     if (Students.length===0) {
         return res.status(400).json({msg:"no hay alumnos en esa seccion"})
