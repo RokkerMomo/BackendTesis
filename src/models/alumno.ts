@@ -6,7 +6,8 @@ export interface IStudent extends Document {
     nombrecompleto:string,
     cedula:string,
     grado:string,
-    seccion:string
+    seccion:string,
+    idHuella:Number,
 }
 
 //EL ESQUEMA DE Alumno
@@ -29,6 +30,10 @@ const UserSchema = new Schema ({
         type:String,
         require:true
     },
+    idHuella:{
+        type:Number,
+        require:false
+    }
 });
 
 

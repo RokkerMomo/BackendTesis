@@ -21,5 +21,9 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         require: true
     },
+    idHuella: {
+        type: Number,
+        require: false
+    }
 });
 exports.default = (0, mongoose_1.model)('alumnos', UserSchema);

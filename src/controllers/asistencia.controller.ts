@@ -1,22 +1,34 @@
 import { Request, Response } from "express"
 import asistencia,{ IAttendance } from "../models/asistencia";
+import alumnos, {IStudent} from "../models/alumno"
 import jwt from 'jsonwebtoken'
 import config from "../config/config";
 //FUNCION PARA CREAR TOKEN
 
 //Registrar asistencia
 export const NewAttendance = async (req: Request,res: Response): Promise<Response> =>{
-    if (!req.body.id_alumno || !req.body.fecha || !req.body.grado|| !req.body.seccion){
+    if (!req.body.idHuella){
         return res.status(400).json({msg:'Error no llegaron todos los datos'})
     }
-    const Asistencia = await asistencia.findOne({id_alumno: req.body.id_alumno, fecha: req.body.fecha}) 
+    const today = new Date()
+    const alumno:any = await alumnos.findOne({idHuella:req.body.idHuella})
+    if (!alumno) {
+        return res.status(400).json({msg:'Esa huella no esta asignada a ningun alumno'});
+    }
+    const Asistencia = await asistencia.findOne({id_alumno: alumno._id, fecha: today}) 
     if(Asistencia){
         return res.status(400).json({msg:'El alumno ya ingreso el dia de hoy'});
     }
     //GUARDAR asistencia
-    const NewAttendance = new asistencia(req.body);
+    const payload = {
+    id_alumno:alumno._id,
+    grado:alumno.grado,
+    seccion:alumno.seccion,
+    fecha:today
+    }
+    const NewAttendance = new asistencia(payload);
     await NewAttendance.save();
-    return res.status(201).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
+    return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
 }
 
 //Get all students

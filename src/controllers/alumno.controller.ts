@@ -16,8 +16,16 @@ export const NewStudent = async (req: Request,res: Response): Promise<Response> 
     if(Student){
         return res.status(400).json({msg:'El alumno ya existe, verificar cedula y nombre completo'});
     }
+    const users = await alumnos.find();
+    const payload = {
+        nombrecompleto:req.body.nombrecompleto,
+        cedula:req.body.cedula,
+        grado:req.body.grado,
+        seccion:req.body.seccion,
+        idHuella:users.length + 1
+        }
     //GUARDAR Alumno
-    const newStudent = new alumnos(req.body);
+    const newStudent = new alumnos(payload);
     await newStudent.save();
     return res.status(201).json({newStudent,msg:'Alumno registrado correctamente'});
 }
@@ -53,5 +61,5 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
   //Get all students
   export const getallStudent = async (req : Request, res: Response):Promise<Response>=>{
     const users = await alumnos.find();
-    return res.status(200).json(users)
+    return res.status(200).json(users.length)
   }

@@ -27,8 +27,16 @@ const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (Student) {
         return res.status(400).json({ msg: 'El alumno ya existe, verificar cedula y nombre completo' });
     }
+    const users = yield alumno_1.default.find();
+    const payload = {
+        nombrecompleto: req.body.nombrecompleto,
+        cedula: req.body.cedula,
+        grado: req.body.grado,
+        seccion: req.body.seccion,
+        idHuella: users.length + 1
+    };
     //GUARDAR Alumno
-    const newStudent = new alumno_1.default(req.body);
+    const newStudent = new alumno_1.default(payload);
     yield newStudent.save();
     return res.status(201).json({ newStudent, msg: 'Alumno registrado correctamente' });
 });
@@ -63,6 +71,6 @@ exports.SearchStudentByGrade = SearchStudentByGrade;
 //Get all students
 const getallStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield alumno_1.default.find();
-    return res.status(200).json(users);
+    return res.status(200).json(users.length);
 });
 exports.getallStudent = getallStudent;

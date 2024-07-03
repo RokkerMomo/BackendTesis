@@ -14,20 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetAttendace = exports.NewAttendance = void 0;
 const asistencia_1 = __importDefault(require("../models/asistencia"));
+const alumno_1 = __importDefault(require("../models/alumno"));
 //FUNCION PARA CREAR TOKEN
 //Registrar asistencia
 const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body.id_alumno || !req.body.fecha || !req.body.grado || !req.body.seccion) {
+    if (!req.body.idHuella) {
         return res.status(400).json({ msg: 'Error no llegaron todos los datos' });
     }
-    const Asistencia = yield asistencia_1.default.findOne({ id_alumno: req.body.id_alumno, fecha: req.body.fecha });
+    const today = new Date();
+    const alumno = yield alumno_1.default.findOne({ idHuella: req.body.idHuella });
+    if (!alumno) {
+        return res.status(400).json({ msg: 'Esa huella no esta asignada a ningun alumno' });
+    }
+    const Asistencia = yield asistencia_1.default.findOne({ id_alumno: alumno._id, fecha: today });
     if (Asistencia) {
         return res.status(400).json({ msg: 'El alumno ya ingreso el dia de hoy' });
     }
     //GUARDAR asistencia
-    const NewAttendance = new asistencia_1.default(req.body);
+    const payload = {
+        id_alumno: alumno._id,
+        grado: alumno.grado,
+        seccion: alumno.seccion,
+        fecha: today
+    };
+    const NewAttendance = new asistencia_1.default(payload);
     yield NewAttendance.save();
-    return res.status(201).json({ NewAttendance, msg: 'Asistencia registrada exitosamente' });
+    return res.status(200).json({ NewAttendance, msg: 'Asistencia registrada exitosamente' });
 });
 exports.NewAttendance = NewAttendance;
 //Get all students
