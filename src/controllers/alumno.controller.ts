@@ -6,7 +6,7 @@ import config from "../config/config";
 
 //REGISTRO
 export const NewStudent = async (req: Request,res: Response): Promise<Response> =>{
-    if (!req.body.nombrecompleto || !req.body.cedula || !req.body.grado|| !req.body.seccion){
+    if (!req.body.nombrecompleto || !req.body.url_foto|| !req.body.cedula || !req.body.edad || !req.body.genero || !req.body.id_curso){
         return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
     }
     const Student = await alumnos.findOne({$or: [
@@ -19,9 +19,11 @@ export const NewStudent = async (req: Request,res: Response): Promise<Response> 
     const users = await alumnos.find();
     const payload = {
         nombrecompleto:req.body.nombrecompleto,
+        url_foto:req.body.url_foto,
         cedula:req.body.cedula,
-        grado:req.body.grado,
-        seccion:req.body.seccion,
+        edad:req.body.edad,
+        genero:req.body.genero,
+        id_curso:req.body.id_curso,
         idHuella:users.length + 1
         }
     //GUARDAR Alumno
@@ -43,6 +45,9 @@ export const SearchStudent = async (req : Request, res: Response):Promise<Respon
     return res.status(201).json(Students)
   }
 
+
+  
+
   //Buscar alumnos por Grado
 export const SearchStudentByGrade = async (req : Request, res: Response):Promise<Response>=>{
     console.log(req.params.grade);
@@ -58,8 +63,14 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
   }
 
 
-  //Get all students
+  //Get all students.lenght
   export const getallStudent = async (req : Request, res: Response):Promise<Response>=>{
     const users = await alumnos.find();
     return res.status(200).json(users.length)
   }
+
+    //Get all students
+    export const getallStudents = async (req : Request, res: Response):Promise<Response>=>{
+        const users = await alumnos.find();
+        return res.status(200).json(users)
+      }

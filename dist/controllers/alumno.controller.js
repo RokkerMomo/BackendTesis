@@ -12,12 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
+exports.getallStudents = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
 const alumno_1 = __importDefault(require("../models/alumno"));
 //FUNCION PARA CREAR TOKEN
 //REGISTRO
 const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.body.nombrecompleto || !req.body.cedula || !req.body.grado || !req.body.seccion) {
+    if (!req.body.nombrecompleto || !req.body.url_foto || !req.body.cedula || !req.body.edad || !req.body.genero || !req.body.id_curso) {
         return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
     }
     const Student = yield alumno_1.default.findOne({ $or: [
@@ -30,9 +30,11 @@ const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     const users = yield alumno_1.default.find();
     const payload = {
         nombrecompleto: req.body.nombrecompleto,
+        url_foto: req.body.url_foto,
         cedula: req.body.cedula,
-        grado: req.body.grado,
-        seccion: req.body.seccion,
+        edad: req.body.edad,
+        genero: req.body.genero,
+        id_curso: req.body.id_curso,
         idHuella: users.length + 1
     };
     //GUARDAR Alumno
@@ -68,9 +70,15 @@ const SearchStudentByGrade = (req, res) => __awaiter(void 0, void 0, void 0, fun
     return res.status(200).json(Students);
 });
 exports.SearchStudentByGrade = SearchStudentByGrade;
-//Get all students
+//Get all students.lenght
 const getallStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield alumno_1.default.find();
     return res.status(200).json(users.length);
 });
 exports.getallStudent = getallStudent;
+//Get all students
+const getallStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield alumno_1.default.find();
+    return res.status(200).json(users);
+});
+exports.getallStudents = getallStudents;

@@ -9,17 +9,29 @@ const UserSchema = new mongoose_1.Schema({
         required: true,
         trim: true
     },
+    url_foto: {
+        type: String,
+        unique: true,
+        required: false,
+        trim: true
+    },
     cedula: {
         type: String,
         require: true
     },
-    grado: {
+    edad: {
         type: String,
         require: true
     },
-    seccion: {
+    genro: {
         type: String,
         require: true
+    },
+    id_curso: {
+        type: String,
+        unique: false,
+        required: true,
+        trim: true
     },
     idHuella: {
         type: Number,

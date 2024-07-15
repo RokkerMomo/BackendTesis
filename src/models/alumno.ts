@@ -4,9 +4,11 @@ import { Model, Schema, Document, model } from "mongoose";
 //INTERFACE
 export interface IStudent extends Document {
     nombrecompleto:string,
+    url_foto:string,
     cedula:string,
-    grado:string,
-    seccion:string,
+    edad:string,
+    genero:string,
+    id_curso:string,
     idHuella:Number,
 }
 
@@ -18,17 +20,29 @@ const UserSchema = new Schema ({
         required:true,
         trim:true
     },
+    url_foto:{
+        type:String,
+        unique:true,
+        required:false,
+        trim:true
+    },
     cedula:{
         type:String,
         require:true
     },
-    grado:{
+    edad:{
         type:String,
         require:true
     },
-    seccion:{
+    genro:{
         type:String,
         require:true
+    },
+    id_curso:{
+        type:String,
+        unique:false,
+        required:true,
+        trim:true
     },
     idHuella:{
         type:Number,
