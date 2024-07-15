@@ -10,7 +10,7 @@ export interface IAttendance extends Document {
 }
 
 //EL ESQUEMA DE asistencia
-const UserSchema = new Schema ({
+const AttendanceSchema = new Schema ({
     id_alumno:{
         type:String,
         required:true,
@@ -27,4 +27,4 @@ const UserSchema = new Schema ({
 });
 
 
-export default model<IAttendance>('Asistencia', UserSchema);
+export default model<IAttendance>('Asistencia', AttendanceSchema);

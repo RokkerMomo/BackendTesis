@@ -13,7 +13,7 @@ export interface IStudent extends Document {
 }
 
 //EL ESQUEMA DE Alumno
-const UserSchema = new Schema ({
+const StudentSchema = new Schema ({
     nombrecompleto:{
         type:String,
         unique:true,
@@ -51,4 +51,4 @@ const UserSchema = new Schema ({
 });
 
 
-export default model<IStudent>('alumnos', UserSchema);
+export default model<IStudent>('alumnos', StudentSchema);
