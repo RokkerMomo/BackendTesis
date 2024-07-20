@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getallusers = exports.signIn = exports.signUp = void 0;
 const user_1 = __importDefault(require("../models/user"));
+const profesor_1 = __importDefault(require("../models/profesor"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../config/config"));
 //FUNCION PARA CREAR TOKEN
@@ -43,17 +44,30 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).json({ msg: "Asegurese de ingresar el usuario y la contraseña" });
     }
     const user = yield user_1.default.findOne({ usuario: req.body.usuario });
-    if (!user) {
-        return res.status(400).json({ msg: "El usuario no existe" });
+    const teacher = yield profesor_1.default.findOne({ usuario: req.body.usuario });
+    if (user) {
+        const isMatch = yield user.comparePassword(req.body.password);
+        if (!isMatch) {
+            //DEVOLVER RESPUETA
+            return res.status(400).json({ msg: "El Usuario o la contraseña son incorrectos" });
+        }
+        //DEVOLVER TOKEN
+        return res.status(201).json({ user, token: createToken(user), msg: "ingreso como usuario" });
     }
-    const isMatch = yield user.comparePassword(req.body.password);
-    if (!isMatch) {
-        //DEVOLVER RESPUETA
-        return res.status(400).json({ msg: "El correo o la contraseña son incorrectos" });
+    else {
+        if (teacher) {
+            const isMatch = yield teacher.comparePassword(req.body.password);
+            if (!isMatch) {
+                //DEVOLVER RESPUETA
+                return res.status(400).json({ msg: "El Usuario o la contraseña son incorrectos" });
+            }
+            //DEVOLVER TOKEN
+            return res.status(201).json({ teacher, token: createToken(teacher), msg: "ingreso como teacher" });
+        }
+        else {
+            return res.status(400).json({ msg: "El usuario no existe" });
+        }
     }
-    //DEVOLVER TOKEN
-    //  user.push({token:createToken(user)})
-    return res.status(201).json({ user, token: createToken(user) });
 });
 exports.signIn = signIn;
 //Get all users para probar con el esp32

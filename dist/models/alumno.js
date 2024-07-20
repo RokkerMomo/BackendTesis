@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 //EL ESQUEMA DE Alumno
-const UserSchema = new mongoose_1.Schema({
+const StudentSchema = new mongoose_1.Schema({
     nombrecompleto: {
         type: String,
         unique: true,
@@ -23,7 +23,7 @@ const UserSchema = new mongoose_1.Schema({
         type: String,
         require: true
     },
-    genro: {
+    genero: {
         type: String,
         require: true
     },
@@ -38,4 +38,4 @@ const UserSchema = new mongoose_1.Schema({
         require: false
     }
 });
-exports.default = (0, mongoose_1.model)('alumnos', UserSchema);
+exports.default = (0, mongoose_1.model)('alumnos', StudentSchema);

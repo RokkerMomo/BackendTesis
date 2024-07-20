@@ -34,7 +34,7 @@ const StudentSchema = new Schema ({
         type:String,
         require:true
     },
-    genro:{
+    genero:{
         type:String,
         require:true
     },
