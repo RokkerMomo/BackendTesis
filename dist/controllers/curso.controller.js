@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getsections = exports.getGrades = exports.NewGrade = void 0;
+exports.getsections = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
 const curso_1 = __importDefault(require("../models/curso"));
 const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.id_profesor || !req.body.nombreCurso || !req.body.cantidad) {
@@ -68,6 +68,15 @@ const getGrades = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(200).json(uniqueArrayUsingFilter);
 });
 exports.getGrades = getGrades;
+//Get all grades
+const getstudentgrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+    }
+    const grade = yield curso_1.default.find({ _id: req.params.id });
+    return res.status(200).json(grade);
+});
+exports.getstudentgrade = getstudentgrade;
 //Get all sections
 const getsections = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {

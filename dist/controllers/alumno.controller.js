@@ -12,8 +12,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getallStudents = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
+exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
 const alumno_1 = __importDefault(require("../models/alumno"));
+const curso_1 = __importDefault(require("../models/curso"));
 //FUNCION PARA CREAR TOKEN
 //REGISTRO
 const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -76,6 +77,26 @@ const getallStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     return res.status(200).json(users.length);
 });
 exports.getallStudent = getallStudent;
+const getStundetsByTeacher = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+    }
+    const grades = yield curso_1.default.find({ id_profesor: req.params.id });
+    console.log("wtf ?");
+    console.log(grades);
+    const payload = [];
+    for (let index = 0; index < grades.length; index++) {
+        const student = yield alumno_1.default.findOne({ id_curso: grades[index]._id });
+        payload.push(student);
+    }
+    if (payload.length != 0) {
+        return res.status(200).json(payload);
+    }
+    else {
+        return res.status(400).json({ msg: "Profesor no tiene alumnos" });
+    }
+});
+exports.getStundetsByTeacher = getStundetsByTeacher;
 //Get all students
 const getallStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield alumno_1.default.find();

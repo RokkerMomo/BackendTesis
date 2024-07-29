@@ -17,6 +17,7 @@ router.get('/getallstudent', alumno_controller_1.getallStudent);
 router.get('/getallstudents', alumno_controller_1.getallStudents);
 router.get('/searchstudent/:search', alumno_controller_1.SearchStudent);
 router.get('/searchstudentbygrade/:grade/:section', alumno_controller_1.SearchStudentByGrade);
+router.get('/getStundetsByTeacher/:id', alumno_controller_1.getStundetsByTeacher);
 //endpoints para las asistencias
 router.post('/NewAttendance', asistencia_controller_1.NewAttendance);
 router.get('/GetAttendace/:id', asistencia_controller_1.GetAttendace);
@@ -24,6 +25,7 @@ router.get('/GetAttendace/:id', asistencia_controller_1.GetAttendace);
 router.post('/NewGrade', curso_controller_1.NewGrade);
 router.get('/getGrades', curso_controller_1.getGrades);
 router.get('/getsections/:id', curso_controller_1.getsections);
+router.get('/getstudentgrade/:id', curso_controller_1.getstudentgrade);
 //endpoints para los profesores
 router.post('/NewTeacher', profesor_controller_1.newTeacher);
 router.get('/allTeachers', profesor_controller_1.getallTeachers);

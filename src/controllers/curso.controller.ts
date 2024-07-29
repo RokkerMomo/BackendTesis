@@ -59,6 +59,15 @@ export const getGrades = async (req : Request, res: Response):Promise<Response>=
     return res.status(200).json(uniqueArrayUsingFilter)
   }
 
+  //Get all grades
+export const getstudentgrade = async (req : Request, res: Response):Promise<Response>=>{
+    if (!req.params.id){
+        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+    }
+    const grade = await cursos.find({_id:req.params.id});
+    return res.status(200).json(grade)
+  }
+
   //Get all sections
 export const getsections = async (req : Request, res: Response):Promise<Response>=>{
     if (!req.params.id){
