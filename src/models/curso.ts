@@ -1,4 +1,4 @@
-import { Model, Schema, Document, model } from "mongoose";
+import { Model, Schema, Document, model, Date } from "mongoose";
 
 
 //INTERFACE
@@ -6,6 +6,9 @@ export interface Igrade extends Document {
     id_profesor:string,
     nombreCurso:string,
     seccion:string,
+    fechaInicio:Date,
+    duracionCurso:number,
+    totalClases:number
 }
 
 const GradeSchema = new Schema ({
@@ -21,6 +24,18 @@ const GradeSchema = new Schema ({
     },
     seccion:{
         type:String,
+        require:true
+    },
+    fechaInicio:{
+        type:Date,
+        require:true
+    },
+    duracionCurso:{
+        type:Number,
+        require:true
+    },
+    totalClases:{
+        type:Number,
         require:true
     },
 });

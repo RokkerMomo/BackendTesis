@@ -16,5 +16,17 @@ const GradeSchema = new mongoose_1.Schema({
         type: String,
         require: true
     },
+    fechaInicio: {
+        type: Date,
+        require: true
+    },
+    duracionCurso: {
+        type: Number,
+        require: true
+    },
+    totalClases: {
+        type: Number,
+        require: true
+    },
 });
 exports.default = (0, mongoose_1.model)('cursos', GradeSchema);

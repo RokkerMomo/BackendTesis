@@ -1,51 +1,60 @@
 import { Request, Response } from "express"
 import cursos,{ Igrade } from "../models/curso";
+import clases,{ Iclass } from "../models/clase";
 
 export const NewGrade = async (req:Request,res:Response):Promise<Response> => {
-    if (!req.body.id_profesor || !req.body.nombreCurso|| !req.body.cantidad){
+    if (
+        !req.body.HoraEnd ||
+        !req.body.id_profesor || 
+        !req.body.nombreCurso|| 
+        !req.body.seccion || 
+        !req.body.fechaInicio || 
+        !req.body.duracionCurso
+){
         return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
     }
-    const grade = await cursos.findOne({nombreCurso:req.body.nombreCurso});
+    const grade = await cursos.findOne({$and: [
+        {nombreCurso: req.body.nombreCurso},
+        {seccion: req.body.seccion}
+    ]});
     if(grade){
         return res.status(400).json({msg:'El Curso que ingreso ya existe'});
     }
-    if (req.body.cantidad > 3) {
-        return res.status(400).json({msg:'Maximo de secciones 3'});
-    }
-    for (let index = 1; index <= req.body.cantidad; index++) {
-        if (index == 1) {
-            const payload = {
-                id_profesor:req.body.id_profesor,
-                nombreCurso:req.body.nombreCurso,
-                seccion:"A",
-                }
-            const newGrade = new cursos(payload);
-            await newGrade.save();
-        }else{
-            if (index == 2) {
-                const payload = {
-                    id_profesor:req.body.id_profesor,
-                    nombreCurso:req.body.nombreCurso,
-                    seccion:"B",
-                    }
-             
-                const newGrade = new cursos(payload);
-                await newGrade.save();
-            } else {
-                const payload = {
-                    id_profesor:req.body.id_profesor,
-                    nombreCurso:req.body.nombreCurso,
-                    seccion:"C",
-                    }
-             
-                const newGrade = new cursos(payload);
-                await newGrade.save();
-            }
-        }
-        
+    //GUARDAR Curso
+
+    const total = req.body.duracionCurso*req.body.dias.length
+    const payloadcurso ={
+        id_profesor:req.body.id_profesor,
+        nombreCurso:req.body.nombreCurso,
+        seccion:req.body.seccion,
+        fechaInicio:req.body.fechaInicio,
+        duracionCurso:req.body.duracionCurso,
+        totalClases:total
     }
 
-    return res.status(200).json({msg:"curso creado con exito"})
+    const newCurso = new cursos(payloadcurso);
+    await newCurso.save();
+
+    for (let index = 0; index < req.body.dias.length; index++) {
+
+
+
+
+        const payloadClase ={
+
+            id_curso:newCurso._id,
+            dia:req.body.dias[index],
+            horaStart:req.body.horaStart,
+            TimeFinish:req.body.HoraEnd,
+            
+        }
+        console.log(payloadClase)
+        const newclase = new clases(payloadClase);
+        await newclase.save();
+    }
+    
+    return res.status(201).json({newCurso,msg:'Curso registrado correctamente'});
+
 }
 
 
