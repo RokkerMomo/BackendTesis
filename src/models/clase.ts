@@ -5,8 +5,8 @@ import { Model, Schema, Document, model, Date } from "mongoose";
 export interface Iclass extends Document {
     id_curso:string,
     dia:string,
-    horaStart:Date,
-    TimeFinish:Date,
+    horaStart:string,
+    TimeFinish:string,
 }
 
 const ClassSchema = new Schema ({
@@ -21,11 +21,11 @@ const ClassSchema = new Schema ({
         require:true
     },
     horaStart:{
-        type:Date,
+        type:String,
         require:true
     },
     TimeFinish:{
-        type:Date,
+        type:String,
         require:true
     }
 });

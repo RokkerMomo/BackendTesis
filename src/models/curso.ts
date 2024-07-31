@@ -6,7 +6,7 @@ export interface Igrade extends Document {
     id_profesor:string,
     nombreCurso:string,
     seccion:string,
-    fechaInicio:Date,
+    fechaInicio:string,
     duracionCurso:number,
     totalClases:number
 }
@@ -27,7 +27,7 @@ const GradeSchema = new Schema ({
         require:true
     },
     fechaInicio:{
-        type:Date,
+        type:String,
         require:true
     },
     duracionCurso:{

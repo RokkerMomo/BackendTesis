@@ -13,11 +13,11 @@ const ClassSchema = new mongoose_1.Schema({
         require: true
     },
     horaStart: {
-        type: Date,
+        type: String,
         require: true
     },
     TimeFinish: {
-        type: Date,
+        type: String,
         require: true
     }
 });

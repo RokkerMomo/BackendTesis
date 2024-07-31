@@ -4,9 +4,9 @@ import { Model, Schema, Document, model } from "mongoose";
 //INTERFACE
 export interface IAttendance extends Document {
     id_alumno:string,
-    grado:string,
-    seccion:string,
-    fecha:Date
+    id_curso:string,
+    fecha:String,
+    hora:String
 }
 
 //EL ESQUEMA DE asistencia
@@ -15,7 +15,7 @@ const AttendanceSchema = new Schema ({
         type:String,
         required:true,
     },
-    grado:{
+    id_curso:{
         type:String,
         require:true
     },
@@ -23,7 +23,14 @@ const AttendanceSchema = new Schema ({
         type:String,
         require:true
     },
-    fecha:Date
+    fecha:{
+        type:String,
+        require:true
+    },
+    hora:{
+        type:String,
+        require:true
+    }
 });
 
 

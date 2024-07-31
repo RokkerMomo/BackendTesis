@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GetAttendace = exports.NewAttendance = void 0;
 const asistencia_1 = __importDefault(require("../models/asistencia"));
 const alumno_1 = __importDefault(require("../models/alumno"));
-//FUNCION PARA CREAR TOKEN
+const clase_1 = __importDefault(require("../models/clase"));
 //Registrar asistencia
 const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.idHuella) {
@@ -26,20 +26,33 @@ const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     if (!alumno) {
         return res.status(400).json({ msg: 'Esa huella no esta asignada a ningun alumno' });
     }
-    const Asistencia = yield asistencia_1.default.findOne({ id_alumno: alumno._id, fecha: today });
-    if (Asistencia) {
-        return res.status(400).json({ msg: 'El alumno ya ingreso el dia de hoy' });
+    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const Class = yield clase_1.default.find(({ $and: [
+            { id_curso: alumno.id_curso },
+            { dia: weekday[today.getDay()] }
+        ] }));
+    if (!Class) {
+        return res.status(400).json({ msg: 'El alumno no tiene clase hoy' });
     }
-    //GUARDAR asistencia
-    const payload = {
-        id_alumno: alumno._id,
-        grado: alumno.grado,
-        seccion: alumno.seccion,
-        fecha: today
-    };
-    const NewAttendance = new asistencia_1.default(payload);
-    yield NewAttendance.save();
-    return res.status(200).json({ NewAttendance, msg: 'Asistencia registrada exitosamente' });
+    if (today.toLocaleTimeString('en-GB') > Class[0].horaStart && today.toLocaleTimeString('en-GB') < Class[0].TimeFinish) {
+        const Asistencia = yield asistencia_1.default.findOne({ id_alumno: alumno._id, fecha: today.toLocaleDateString() });
+        if (Asistencia) {
+            return res.status(400).json({ msg: 'El alumno ya ingreso el dia de hoy' });
+        }
+        //GUARDAR asistencia
+        const payload = {
+            id_alumno: alumno._id,
+            id_curso: alumno.id_curso,
+            fecha: today.toLocaleDateString(),
+            hora: today.toLocaleTimeString('en-GB')
+        };
+        const NewAttendance = new asistencia_1.default(payload);
+        yield NewAttendance.save();
+        return res.status(200).json({ NewAttendance, msg: 'Asistencia registrada exitosamente' });
+    }
+    else {
+        return res.status(400).json({ msg: 'No es Hora de Clase' });
+    }
 });
 exports.NewAttendance = NewAttendance;
 //Get all students

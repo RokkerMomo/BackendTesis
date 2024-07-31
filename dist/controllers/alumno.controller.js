@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
 const alumno_1 = __importDefault(require("../models/alumno"));
 const curso_1 = __importDefault(require("../models/curso"));
+const asistencia_1 = __importDefault(require("../models/asistencia"));
 //FUNCION PARA CREAR TOKEN
 //REGISTRO
 const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -82,12 +83,30 @@ const getStundetsByTeacher = (req, res) => __awaiter(void 0, void 0, void 0, fun
         return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
     }
     const grades = yield curso_1.default.find({ id_profesor: req.params.id });
-    console.log("wtf ?");
     console.log(grades);
     const payload = [];
     for (let index = 0; index < grades.length; index++) {
         const student = yield alumno_1.default.findOne({ id_curso: grades[index]._id });
-        payload.push(student);
+        if (student) {
+            const attendance = yield asistencia_1.default.find({ $and: [
+                    { id_alumno: student._id },
+                    { id_curso: grades[index]._id }
+                ] });
+            const percentage = ((attendance.length * 1) / grades[index].totalClases) * 100;
+            const payloadStudent = {
+                _id: student._id,
+                nombrecompleto: student.nombrecompleto,
+                url_foto: student.url_foto,
+                cedula: student.cedula,
+                edad: student.edad,
+                genero: student.genero,
+                id_curso: student.id_curso,
+                idHuella: student.idHuella,
+                percentage: percentage
+            };
+            payload.push(payloadStudent);
+            console.log(payloadStudent);
+        }
     }
     if (payload.length != 0) {
         return res.status(200).json(payload);

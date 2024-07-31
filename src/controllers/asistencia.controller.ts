@@ -1,9 +1,8 @@
 import { Request, Response } from "express"
 import asistencia,{ IAttendance } from "../models/asistencia";
 import alumnos, {IStudent} from "../models/alumno"
-import jwt from 'jsonwebtoken'
-import config from "../config/config";
-//FUNCION PARA CREAR TOKEN
+import clases,{ Iclass } from "../models/clase";
+
 
 //Registrar asistencia
 export const NewAttendance = async (req: Request,res: Response): Promise<Response> =>{
@@ -15,20 +14,38 @@ export const NewAttendance = async (req: Request,res: Response): Promise<Respons
     if (!alumno) {
         return res.status(400).json({msg:'Esa huella no esta asignada a ningun alumno'});
     }
-    const Asistencia = await asistencia.findOne({id_alumno: alumno._id, fecha: today}) 
+
+    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    const Class:any = await clases.find(({$and: [
+        {id_curso:alumno.id_curso},
+        {dia: weekday[today.getDay()]}
+    ]}))
+    if (!Class) {
+        return res.status(400).json({msg:'El alumno no tiene clase hoy'});
+    }
+    
+    if (today.toLocaleTimeString('en-GB')>Class[0].horaStart && today.toLocaleTimeString('en-GB')<Class[0].TimeFinish) {
+
+        const Asistencia = await asistencia.findOne({id_alumno: alumno._id, fecha: today.toLocaleDateString()})
+
     if(Asistencia){
         return res.status(400).json({msg:'El alumno ya ingreso el dia de hoy'});
     }
     //GUARDAR asistencia
     const payload = {
     id_alumno:alumno._id,
-    grado:alumno.grado,
-    seccion:alumno.seccion,
-    fecha:today
+    id_curso:alumno.id_curso,
+    fecha:today.toLocaleDateString(),
+    hora:today.toLocaleTimeString('en-GB')
     }
     const NewAttendance = new asistencia(payload);
     await NewAttendance.save();
     return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
+
+    }else{
+        return res.status(400).json({msg:'No es Hora de Clase'});
+    }
 }
 
 //Get all students

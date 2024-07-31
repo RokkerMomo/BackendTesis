@@ -17,7 +17,7 @@ const GradeSchema = new mongoose_1.Schema({
         require: true
     },
     fechaInicio: {
-        type: Date,
+        type: String,
         require: true
     },
     duracionCurso: {

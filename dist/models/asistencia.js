@@ -7,7 +7,7 @@ const AttendanceSchema = new mongoose_1.Schema({
         type: String,
         required: true,
     },
-    grado: {
+    id_curso: {
         type: String,
         require: true
     },
@@ -15,6 +15,13 @@ const AttendanceSchema = new mongoose_1.Schema({
         type: String,
         require: true
     },
-    fecha: Date
+    fecha: {
+        type: String,
+        require: true
+    },
+    hora: {
+        type: String,
+        require: true
+    }
 });
 exports.default = (0, mongoose_1.model)('Asistencia', AttendanceSchema);

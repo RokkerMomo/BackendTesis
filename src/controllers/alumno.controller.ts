@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import alumnos, {IStudent} from "../models/alumno"
 import cursos,{ Igrade } from "../models/curso";
+import asistencia,{ IAttendance } from "../models/asistencia";
 import jwt from 'jsonwebtoken'
 import config from "../config/config";
 //FUNCION PARA CREAR TOKEN
@@ -75,14 +76,38 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
     if (!req.params.id){
         return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
     }
-    const grades = await cursos.find({id_profesor:req.params.id})
-    console.log("wtf ?")
+
+    const grades:any = await cursos.find({id_profesor:req.params.id})
+
     console.log(grades)
+    
     const payload =[]
 
     for (let index = 0; index < grades.length; index++) {
-        const student = await alumnos.findOne({id_curso:grades[index]._id});
-        payload.push(student)
+        const student:any = await alumnos.findOne({id_curso:grades[index]._id});
+        if (student) {
+            const attendance = await asistencia.find({$and: [
+                {id_alumno: student._id},
+                {id_curso: grades[index]._id}
+            ]})
+    
+            const percentage = ((attendance.length *1)/grades[index].totalClases)*100
+            const payloadStudent = {
+                _id:student._id,
+                nombrecompleto:student.nombrecompleto,
+                url_foto:student.url_foto,
+                cedula:student.cedula,
+                edad:student.edad,
+                genero:student.genero,
+                id_curso:student.id_curso,
+                idHuella:student.idHuella,
+                percentage:percentage
+            }
+    
+            payload.push(payloadStudent)
+            console.log(payloadStudent)
+            
+        }
     }
     if (payload.length!=0) {
         return res.status(200).json(payload)
