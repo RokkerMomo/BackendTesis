@@ -21,7 +21,7 @@ export const NewAttendance = async (req: Request,res: Response): Promise<Respons
         {id_curso:alumno.id_curso},
         {dia: weekday[today.getDay()]}
     ]}))
-    if (!Class) {
+    if (Class.length==0) {
         return res.status(400).json({msg:'El alumno no tiene clase hoy'});
     }
     

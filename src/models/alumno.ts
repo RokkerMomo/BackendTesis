@@ -22,12 +22,13 @@ const StudentSchema = new Schema ({
     },
     url_foto:{
         type:String,
-        unique:true,
+        unique:false,
         required:false,
         trim:true
     },
     cedula:{
         type:String,
+        unique:true,
         require:true
     },
     edad:{

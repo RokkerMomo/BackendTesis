@@ -11,12 +11,13 @@ const StudentSchema = new mongoose_1.Schema({
     },
     url_foto: {
         type: String,
-        unique: true,
+        unique: false,
         required: false,
         trim: true
     },
     cedula: {
         type: String,
+        unique: true,
         require: true
     },
     edad: {

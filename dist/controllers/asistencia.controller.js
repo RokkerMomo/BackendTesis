@@ -31,7 +31,7 @@ const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             { id_curso: alumno.id_curso },
             { dia: weekday[today.getDay()] }
         ] }));
-    if (!Class) {
+    if (Class.length == 0) {
         return res.status(400).json({ msg: 'El alumno no tiene clase hoy' });
     }
     if (today.toLocaleTimeString('en-GB') > Class[0].horaStart && today.toLocaleTimeString('en-GB') < Class[0].TimeFinish) {

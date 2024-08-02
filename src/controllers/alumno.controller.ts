@@ -79,33 +79,39 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
 
     const grades:any = await cursos.find({id_profesor:req.params.id})
 
-    console.log(grades)
     
     const payload =[]
 
     for (let index = 0; index < grades.length; index++) {
-        const student:any = await alumnos.findOne({id_curso:grades[index]._id});
-        if (student) {
-            const attendance = await asistencia.find({$and: [
-                {id_alumno: student._id},
-                {id_curso: grades[index]._id}
-            ]})
-    
-            const percentage = ((attendance.length *1)/grades[index].totalClases)*100
-            const payloadStudent = {
-                _id:student._id,
-                nombrecompleto:student.nombrecompleto,
-                url_foto:student.url_foto,
-                cedula:student.cedula,
-                edad:student.edad,
-                genero:student.genero,
-                id_curso:student.id_curso,
-                idHuella:student.idHuella,
-                percentage:percentage
-            }
-    
-            payload.push(payloadStudent)
-            console.log(payloadStudent)
+        
+        const student:any = await alumnos.find({id_curso:grades[index]._id});
+
+        for (let y = 0; y < student.length; y++) {
+
+            if (student) {
+                const attendance = await asistencia.find({$and: [
+                    {id_alumno: student[y]._id},
+                    {id_curso: grades[index]._id}
+                ]})
+        
+                const percentage = ((attendance.length *1)/grades[index].totalClases)*100
+                const payloadStudent = {
+                    _id:student[y]._id,
+                    nombrecompleto:student[y].nombrecompleto,
+                    url_foto:student[y].url_foto,
+                    cedula:student[y].cedula,
+                    edad:student[y].edad,
+                    genero:student[y].genero,
+                    id_curso:student[y].id_curso,
+                    idHuella:student[y].idHuella,
+                    percentage:percentage
+                }
+        
+                payload.push(payloadStudent)
+            
+            
+        }
+        
             
         }
     }

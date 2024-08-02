@@ -5,9 +5,19 @@ export const newTeacher = async (req:Request,res:Response):Promise<Response> => 
     if (!req.body.nombrecompleto || !req.body.usuario|| !req.body.password){
         return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
     }
+
+    const Student = await profesor.findOne({$or: [
+        {nombrecompleto: req.body.nombrecompleto},
+        {usuario: req.body.usuario}
+    ]}) 
+    if(Student){
+        return res.status(400).json({msg:'Teacher already exist (Check full name and username)'});
+    }
+
+
     const newTeacher = new profesor(req.body);
     await newTeacher.save();
-    return res.status(200).json({msg:"profesor creado"})
+    return res.status(200).json({msg:"New teacher created successfully"})
     
 }
 

@@ -18,9 +18,16 @@ const newTeacher = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (!req.body.nombrecompleto || !req.body.usuario || !req.body.password) {
         return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
     }
+    const Student = yield profesor_1.default.findOne({ $or: [
+            { nombrecompleto: req.body.nombrecompleto },
+            { usuario: req.body.usuario }
+        ] });
+    if (Student) {
+        return res.status(400).json({ msg: 'Teacher already exist (Check full name and username)' });
+    }
     const newTeacher = new profesor_1.default(req.body);
     yield newTeacher.save();
-    return res.status(200).json({ msg: "profesor creado" });
+    return res.status(200).json({ msg: "New teacher created successfully" });
 });
 exports.newTeacher = newTeacher;
 //Get all users para probar con el esp32
