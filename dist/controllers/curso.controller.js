@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getsections = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
+exports.getTeacherGrades = exports.getsections = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
 const curso_1 = __importDefault(require("../models/curso"));
 const clase_1 = __importDefault(require("../models/clase"));
 const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -84,3 +84,14 @@ const getsections = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     return res.status(200).json(grades);
 });
 exports.getsections = getsections;
+const getTeacherGrades = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: "Asegurese de ingresar el id del profesor" });
+    }
+    const grades = yield curso_1.default.find({ id_profesor: req.params.id });
+    if (grades.length == 0) {
+        return res.status(400).json({ msg: "El profesor no tiene cursos asignados" });
+    }
+    return res.status(200).json(grades);
+});
+exports.getTeacherGrades = getTeacherGrades;

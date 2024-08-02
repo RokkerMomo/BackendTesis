@@ -2,7 +2,7 @@ import { Router } from "express";
 import {signIn,signUp,getallusers } from '../controllers/user.controller';
 import { getallStudent, getallStudents, getStundetsByTeacher, NewStudent,SearchStudent, SearchStudentByGrade} from "../controllers/alumno.controller";
 import { GetAttendace, NewAttendance } from "../controllers/asistencia.controller";
-import { getGrades, getsections, getstudentgrade, NewGrade } from "../controllers/curso.controller";
+import { getGrades, getsections, getstudentgrade, getTeacherGrades, NewGrade } from "../controllers/curso.controller";
 import { getallTeachers, newTeacher } from "../controllers/profesor.controller";
 
 const router = Router();
@@ -29,6 +29,8 @@ router.post('/NewGrade',NewGrade)
 router.get('/getGrades',getGrades)
 router.get('/getsections/:id',getsections)
 router.get('/getstudentgrade/:id',getstudentgrade)
+
+router.get('/getTeacherGrades/:id',getTeacherGrades)
 //endpoints para los profesores
 router.post('/NewTeacher', newTeacher)
 router.get('/allTeachers', getallTeachers)

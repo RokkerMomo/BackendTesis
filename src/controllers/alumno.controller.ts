@@ -125,6 +125,48 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
 
     //Get all students
     export const getallStudents = async (req : Request, res: Response):Promise<Response>=>{
-        const users = await alumnos.find();
-        return res.status(200).json(users)
+
+    
+        const grades:any = await cursos.find()
+    
+        
+        const payload =[]
+    
+        for (let index = 0; index < grades.length; index++) {
+            
+            const student:any = await alumnos.find({id_curso:grades[index]._id});
+    
+            for (let y = 0; y < student.length; y++) {
+    
+                if (student) {
+                    const attendance = await asistencia.find({$and: [
+                        {id_alumno: student[y]._id},
+                        {id_curso: grades[index]._id}
+                    ]})
+            
+                    const percentage = ((attendance.length *1)/grades[index].totalClases)*100
+                    const payloadStudent = {
+                        _id:student[y]._id,
+                        nombrecompleto:student[y].nombrecompleto,
+                        url_foto:student[y].url_foto,
+                        cedula:student[y].cedula,
+                        edad:student[y].edad,
+                        genero:student[y].genero,
+                        id_curso:student[y].id_curso,
+                        idHuella:student[y].idHuella,
+                        percentage:percentage
+                    }
+            
+                    payload.push(payloadStudent)
+                
+            }
+                
+            }
+        }
+        if (payload.length!=0) {
+            return res.status(200).json(payload)
+        }else{
+            return res.status(400).json({msg:"No hay alumnos"})
+        }
+
       }

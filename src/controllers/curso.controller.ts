@@ -85,3 +85,15 @@ export const getsections = async (req : Request, res: Response):Promise<Response
     const grades = await cursos.find({nombreCurso:req.params.id});
     return res.status(200).json(grades)
   }
+
+
+export const getTeacherGrades = async (req:Request,res:Response):Promise<Response>=>{
+    if (!req.params.id) {
+        return res.status(400).json({msg:"Asegurese de ingresar el id del profesor"})
+    }
+    const grades = await cursos.find({id_profesor: req.params.id});
+    if (grades.length==0) {
+        return res.status(400).json({msg:"El profesor no tiene cursos asignados"})
+    }
+    return res.status(200).json(grades)
+}

@@ -52,7 +52,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(400).json({ msg: "El Usuario o la contraseña son incorrectos" });
         }
         //DEVOLVER TOKEN
-        return res.status(201).json({ user, token: createToken(user), msg: "ingreso como usuario" });
+        return res.status(201).json({ user, token: createToken(user), rol: 0 });
     }
     else {
         if (teacher) {
@@ -62,7 +62,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 return res.status(400).json({ msg: "El Usuario o la contraseña son incorrectos" });
             }
             //DEVOLVER TOKEN
-            return res.status(201).json({ teacher, token: createToken(teacher), msg: "ingreso como teacher" });
+            return res.status(201).json({ teacher, token: createToken(teacher), rol: 1 });
         }
         else {
             return res.status(400).json({ msg: "El usuario no existe" });
