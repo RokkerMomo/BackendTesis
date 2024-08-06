@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
+exports.getStudentByID = exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
 const alumno_1 = __importDefault(require("../models/alumno"));
 const curso_1 = __importDefault(require("../models/curso"));
 const asistencia_1 = __importDefault(require("../models/asistencia"));
@@ -152,3 +152,14 @@ const getallStudents = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getallStudents = getallStudents;
+const getStudentByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: "Ingrese el id del alumno" });
+    }
+    const student = yield alumno_1.default.findOne({ _id: req.params.id });
+    if (!student) {
+        return res.status(400).json({ msg: "El id ingresado no existe" });
+    }
+    return res.status(200).json(student);
+});
+exports.getStudentByID = getStudentByID;

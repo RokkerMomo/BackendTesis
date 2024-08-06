@@ -56,3 +56,44 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
     const attendance = await asistencia.find({id_alumno:req.params.id});
     return res.status(200).json({msg:`Asistencias del alumno con id : ${req.params.id}`, attendance})
   }
+
+
+
+
+  export const NewAttendanceEdit = async (req:Request,res:Response):Promise<Response> => {
+    if (!req.body.id || !req.body.fecha){
+        return res.status(400).json({msg:'Error no llegaron todos los datos'})
+    }
+    const today = new Date(req.body.fecha)
+    console.log(today)
+    const alumno:any = await alumnos.findOne({_id:req.body.id})
+    if (!alumno) {
+        return res.status(400).json({msg:'Alumno no encontrado'});
+    }
+
+    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    const Class:any = await clases.find(({$and: [
+        {id_curso:alumno.id_curso},
+        {dia: weekday[today.getDay()]}
+    ]}))
+  
+    
+
+        const Asistencia = await asistencia.findOne({id_alumno: alumno._id, fecha: today.toLocaleDateString()})
+
+    if(Asistencia){
+        return res.status(400).json({msg:'El alumno ya ingreso el dia de hoy'});
+    }
+    //GUARDAR asistencia
+    const payload = {
+    id_alumno:alumno._id,
+    id_curso:alumno.id_curso,
+    fecha:req.body.fecha,
+    hora:Class[0].horaStart
+    }
+    const NewAttendance = new asistencia(payload);
+    await NewAttendance.save();
+    return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
+
+  }

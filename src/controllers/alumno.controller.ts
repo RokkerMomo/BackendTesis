@@ -170,3 +170,16 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
         }
 
       }
+
+      export const getStudentByID = async (req:Request,res:Response):Promise<Response> => {
+
+        if (!req.params.id) {
+            return res.status(400).json({msg:"Ingrese el id del alumno"})
+        }
+        const student = await alumnos.findOne({_id:req.params.id})
+
+        if (!student) {
+            return res.status(400).json({msg:"El id ingresado no existe"})
+        }
+        return res.status(200).json(student)
+      }

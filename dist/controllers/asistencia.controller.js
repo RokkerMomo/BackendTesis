@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAttendace = exports.NewAttendance = void 0;
+exports.NewAttendanceEdit = exports.GetAttendace = exports.NewAttendance = void 0;
 const asistencia_1 = __importDefault(require("../models/asistencia"));
 const alumno_1 = __importDefault(require("../models/alumno"));
 const clase_1 = __importDefault(require("../models/clase"));
@@ -64,3 +64,34 @@ const GetAttendace = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     return res.status(200).json({ msg: `Asistencias del alumno con id : ${req.params.id}`, attendance });
 });
 exports.GetAttendace = GetAttendace;
+const NewAttendanceEdit = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.body.id || !req.body.fecha) {
+        return res.status(400).json({ msg: 'Error no llegaron todos los datos' });
+    }
+    const today = new Date(req.body.fecha);
+    console.log(today);
+    const alumno = yield alumno_1.default.findOne({ _id: req.body.id });
+    if (!alumno) {
+        return res.status(400).json({ msg: 'Alumno no encontrado' });
+    }
+    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const Class = yield clase_1.default.find(({ $and: [
+            { id_curso: alumno.id_curso },
+            { dia: weekday[today.getDay()] }
+        ] }));
+    const Asistencia = yield asistencia_1.default.findOne({ id_alumno: alumno._id, fecha: today.toLocaleDateString() });
+    if (Asistencia) {
+        return res.status(400).json({ msg: 'El alumno ya ingreso el dia de hoy' });
+    }
+    //GUARDAR asistencia
+    const payload = {
+        id_alumno: alumno._id,
+        id_curso: alumno.id_curso,
+        fecha: req.body.fecha,
+        hora: Class[0].horaStart
+    };
+    const NewAttendance = new asistencia_1.default(payload);
+    yield NewAttendance.save();
+    return res.status(200).json({ NewAttendance, msg: 'Asistencia registrada exitosamente' });
+});
+exports.NewAttendanceEdit = NewAttendanceEdit;
