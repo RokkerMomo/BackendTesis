@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getStudentByID = exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
+exports.addFingerPrint = exports.getStudentByID = exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
 const alumno_1 = __importDefault(require("../models/alumno"));
 const curso_1 = __importDefault(require("../models/curso"));
 const asistencia_1 = __importDefault(require("../models/asistencia"));
@@ -29,7 +29,6 @@ const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     if (Student) {
         return res.status(400).json({ msg: 'El alumno ya existe, verificar cedula y nombre completo' });
     }
-    const users = yield alumno_1.default.find();
     const payload = {
         nombrecompleto: req.body.nombrecompleto,
         url_foto: req.body.url_foto,
@@ -37,7 +36,7 @@ const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         edad: req.body.edad,
         genero: req.body.genero,
         id_curso: req.body.id_curso,
-        idHuella: users.length + 1
+        idHuella: 0
     };
     //GUARDAR Alumno
     const newStudent = new alumno_1.default(payload);
@@ -163,3 +162,13 @@ const getStudentByID = (req, res) => __awaiter(void 0, void 0, void 0, function*
     return res.status(200).json(student);
 });
 exports.getStudentByID = getStudentByID;
+const addFingerPrint = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.body.id || !req.body.huella) {
+        return res.status(400).json({ msg: "Ingrese todos los datos" });
+    }
+    const filter = { _id: req.body.id };
+    const update = { idHuella: req.body.huella };
+    const student = yield alumno_1.default.findOneAndUpdate(filter, update);
+    return res.status(200).json({ student, msg: "Huella Agregada con exito" });
+});
+exports.addFingerPrint = addFingerPrint;

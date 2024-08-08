@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {signIn,signUp,getallusers } from '../controllers/user.controller';
-import { getallStudent, getallStudents, getStudentByID, getStundetsByTeacher, NewStudent,SearchStudent, SearchStudentByGrade} from "../controllers/alumno.controller";
+import { addFingerPrint, getallStudent, getallStudents, getStudentByID, getStundetsByTeacher, NewStudent,SearchStudent, SearchStudentByGrade} from "../controllers/alumno.controller";
 import { GetAttendace, NewAttendance, NewAttendanceEdit } from "../controllers/asistencia.controller";
 import { getGrades, getsections, getstudentgrade, getTeacherGrades, NewGrade } from "../controllers/curso.controller";
 import { getallTeachers, newTeacher } from "../controllers/profesor.controller";
@@ -20,7 +20,7 @@ router.get('/getallstudents',getallStudents)
 router.get('/searchstudent/:search',SearchStudent)
 router.get('/searchstudentbygrade/:grade/:section',SearchStudentByGrade)
 router.get('/getStundetsByTeacher/:id',getStundetsByTeacher)
-
+router.put('/addFingerPrint',addFingerPrint)
 //endpoints para las asistencias
 router.post('/NewAttendance',NewAttendance)
 router.post('/NewAttendanceEdit',NewAttendanceEdit)

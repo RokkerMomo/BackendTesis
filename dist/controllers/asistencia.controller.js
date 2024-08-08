@@ -79,6 +79,9 @@ const NewAttendanceEdit = (req, res) => __awaiter(void 0, void 0, void 0, functi
             { id_curso: alumno.id_curso },
             { dia: weekday[today.getDay()] }
         ] }));
+    if (Class.length == 0) {
+        return res.status(400).json({ msg: 'El alumno no tiene clase ese dia' });
+    }
     const Asistencia = yield asistencia_1.default.findOne({ id_alumno: alumno._id, fecha: today.toLocaleDateString() });
     if (Asistencia) {
         return res.status(400).json({ msg: 'El alumno ya ingreso el dia de hoy' });

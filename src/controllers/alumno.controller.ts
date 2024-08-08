@@ -18,7 +18,6 @@ export const NewStudent = async (req: Request,res: Response): Promise<Response> 
     if(Student){
         return res.status(400).json({msg:'El alumno ya existe, verificar cedula y nombre completo'});
     }
-    const users = await alumnos.find();
     const payload = {
         nombrecompleto:req.body.nombrecompleto,
         url_foto:req.body.url_foto,
@@ -26,7 +25,7 @@ export const NewStudent = async (req: Request,res: Response): Promise<Response> 
         edad:req.body.edad,
         genero:req.body.genero,
         id_curso:req.body.id_curso,
-        idHuella:users.length + 1
+        idHuella:0
         }
     //GUARDAR Alumno
     const newStudent = new alumnos(payload);
@@ -182,4 +181,15 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
             return res.status(400).json({msg:"El id ingresado no existe"})
         }
         return res.status(200).json(student)
+      }
+
+
+      export const addFingerPrint = async (req:Request,res:Response):Promise<Response> => {
+        if (!req.body.id || !req.body.huella) {
+            return res.status(400).json({msg:"Ingrese todos los datos"})
+        }
+        const filter = { _id: req.body.id };
+        const update = { idHuella: req.body.huella };
+        const student = await alumnos.findOneAndUpdate(filter, update);
+        return res.status(200).json({student,msg:"Huella Agregada con exito"})
       }
