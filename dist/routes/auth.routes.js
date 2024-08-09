@@ -29,6 +29,7 @@ router.post('/NewGrade', curso_controller_1.NewGrade);
 router.get('/getGrades', curso_controller_1.getGrades);
 router.get('/getsections/:id', curso_controller_1.getsections);
 router.get('/getstudentgrade/:id', curso_controller_1.getstudentgrade);
+router.get('/getgradebystudentID/:id', curso_controller_1.getgradebystudentID);
 router.get('/getTeacherGrades/:id', curso_controller_1.getTeacherGrades);
 //endpoints para los profesores
 router.post('/NewTeacher', profesor_controller_1.newTeacher);

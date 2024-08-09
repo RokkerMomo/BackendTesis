@@ -22,6 +22,10 @@ const AttendanceSchema = new mongoose_1.Schema({
     hora: {
         type: String,
         require: true
+    },
+    nota: {
+        type: String,
+        require: false
     }
 });
 exports.default = (0, mongoose_1.model)('Asistencia', AttendanceSchema);

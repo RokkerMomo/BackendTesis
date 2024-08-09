@@ -16,6 +16,7 @@ exports.NewAttendanceEdit = exports.GetAttendace = exports.NewAttendance = void 
 const asistencia_1 = __importDefault(require("../models/asistencia"));
 const alumno_1 = __importDefault(require("../models/alumno"));
 const clase_1 = __importDefault(require("../models/clase"));
+const curso_1 = __importDefault(require("../models/curso"));
 //Registrar asistencia
 const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.idHuella) {
@@ -81,6 +82,21 @@ const NewAttendanceEdit = (req, res) => __awaiter(void 0, void 0, void 0, functi
         ] }));
     if (Class.length == 0) {
         return res.status(400).json({ msg: 'El alumno no tiene clase ese dia' });
+    }
+    const grade = yield curso_1.default.find({ _id: alumno.id_curso });
+    const StartDate = new Date(grade[0].fechaInicio);
+    const FinalDate = new Date(grade[0].fechaFin);
+    for (let index = 0; index < Class.length; index++) {
+        if (today.getDate() > StartDate.getDate() - 1 &&
+            today.getDate() < FinalDate.getDate() + 1 &&
+            today.getMonth() == StartDate.getMonth() &&
+            Class[index].dia == weekday[today.getDay()]) {
+        }
+        else {
+            console.log(today.getDate());
+            console.log(StartDate);
+            return res.status(400).json({ msg: 'El alumno no tiene clase ese dia' });
+        }
     }
     const Asistencia = yield asistencia_1.default.findOne({ id_alumno: alumno._id, fecha: today.toLocaleDateString() });
     if (Asistencia) {

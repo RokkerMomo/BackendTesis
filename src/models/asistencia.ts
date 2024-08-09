@@ -6,7 +6,8 @@ export interface IAttendance extends Document {
     id_alumno:string,
     id_curso:string,
     fecha:String,
-    hora:String
+    hora:String,
+    nota:String
 }
 
 //EL ESQUEMA DE asistencia
@@ -30,6 +31,10 @@ const AttendanceSchema = new Schema ({
     hora:{
         type:String,
         require:true
+    },
+    nota:{
+        type:String,
+        require:false
     }
 });
 

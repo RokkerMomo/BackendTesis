@@ -2,7 +2,7 @@ import { Router } from "express";
 import {signIn,signUp,getallusers } from '../controllers/user.controller';
 import { addFingerPrint, getallStudent, getallStudents, getStudentByID, getStundetsByTeacher, NewStudent,SearchStudent, SearchStudentByGrade} from "../controllers/alumno.controller";
 import { GetAttendace, NewAttendance, NewAttendanceEdit } from "../controllers/asistencia.controller";
-import { getGrades, getsections, getstudentgrade, getTeacherGrades, NewGrade } from "../controllers/curso.controller";
+import { getgradebystudentID, getGrades, getsections, getstudentgrade, getTeacherGrades, NewGrade } from "../controllers/curso.controller";
 import { getallTeachers, newTeacher } from "../controllers/profesor.controller";
 
 const router = Router();
@@ -31,6 +31,7 @@ router.post('/NewGrade',NewGrade)
 router.get('/getGrades',getGrades)
 router.get('/getsections/:id',getsections)
 router.get('/getstudentgrade/:id',getstudentgrade)
+router.get('/getgradebystudentID/:id',getgradebystudentID)
 
 router.get('/getTeacherGrades/:id',getTeacherGrades)
 //endpoints para los profesores

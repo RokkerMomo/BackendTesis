@@ -12,9 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTeacherGrades = exports.getsections = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
+exports.getTeacherGrades = exports.getsections = exports.getgradebystudentID = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
 const curso_1 = __importDefault(require("../models/curso"));
 const clase_1 = __importDefault(require("../models/clase"));
+const alumno_1 = __importDefault(require("../models/alumno"));
 const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.HoraEnd ||
         !req.body.id_profesor ||
@@ -32,12 +33,23 @@ const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).json({ msg: 'El Curso que ingreso ya existe' });
     }
     //GUARDAR Curso
+    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const total = req.body.duracionCurso * req.body.dias.length;
+    let diasTotales = total - 1;
+    let fechaFin = new Date(req.body.fechaInicio);
+    while (diasTotales > 0) {
+        fechaFin.setDate(fechaFin.getDate() + 1);
+        if (req.body.dias.includes(weekday[fechaFin.getDay()])) {
+            diasTotales--;
+        }
+    }
+    const FechaFinal = fechaFin.toLocaleDateString();
     const payloadcurso = {
         id_profesor: req.body.id_profesor,
         nombreCurso: req.body.nombreCurso,
         seccion: req.body.seccion,
         fechaInicio: req.body.fechaInicio,
+        fechaFin: FechaFinal,
         duracionCurso: req.body.duracionCurso,
         totalClases: total
     };
@@ -75,6 +87,16 @@ const getstudentgrade = (req, res) => __awaiter(void 0, void 0, void 0, function
     return res.status(200).json(grade);
 });
 exports.getstudentgrade = getstudentgrade;
+const getgradebystudentID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+    }
+    const Students = yield alumno_1.default.findOne({ _id: req.params.id });
+    const grade = yield curso_1.default.find({ _id: Students.id_curso });
+    const classes = yield clase_1.default.find({ id_curso: Students.id_curso });
+    return res.status(200).json({ grade, classes });
+});
+exports.getgradebystudentID = getgradebystudentID;
 //Get all sections
 const getsections = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {

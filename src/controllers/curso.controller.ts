@@ -1,6 +1,7 @@
 import { Request, Response } from "express"
 import cursos,{ Igrade } from "../models/curso";
 import clases,{ Iclass } from "../models/clase";
+import alumnos, {IStudent} from "../models/alumno"
 
 export const NewGrade = async (req:Request,res:Response):Promise<Response> => {
     if (
@@ -21,13 +22,26 @@ export const NewGrade = async (req:Request,res:Response):Promise<Response> => {
         return res.status(400).json({msg:'El Curso que ingreso ya existe'});
     }
     //GUARDAR Curso
-
+    const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     const total = req.body.duracionCurso*req.body.dias.length
+    let diasTotales = total - 1
+    let fechaFin = new Date(req.body.fechaInicio);
+    while (diasTotales >0) {
+        fechaFin.setDate(fechaFin.getDate() + 1);
+        if (req.body.dias.includes(weekday[fechaFin.getDay()])) {
+            diasTotales--;
+        }
+    }
+
+    const FechaFinal = fechaFin.toLocaleDateString()
+
+    
     const payloadcurso ={
         id_profesor:req.body.id_profesor,
         nombreCurso:req.body.nombreCurso,
         seccion:req.body.seccion,
         fechaInicio:req.body.fechaInicio,
+        fechaFin:FechaFinal,
         duracionCurso:req.body.duracionCurso,
         totalClases:total
     }
@@ -75,6 +89,16 @@ export const getstudentgrade = async (req : Request, res: Response):Promise<Resp
     }
     const grade = await cursos.find({_id:req.params.id});
     return res.status(200).json(grade)
+  }
+
+  export const getgradebystudentID = async (req : Request, res: Response):Promise<Response> => {
+    if (!req.params.id){
+        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+    }
+    const Students:any = await alumnos.findOne({_id:req.params.id});
+    const grade:any = await cursos.find({_id:Students.id_curso});
+    const classes = await clases.find({id_curso:Students.id_curso});
+    return res.status(200).json({grade,classes})
   }
 
   //Get all sections
