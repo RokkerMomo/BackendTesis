@@ -24,6 +24,7 @@ router.put('/addFingerPrint', alumno_controller_1.addFingerPrint);
 router.post('/NewAttendance', asistencia_controller_1.NewAttendance);
 router.post('/NewAttendanceEdit', asistencia_controller_1.NewAttendanceEdit);
 router.get('/GetAttendace/:id', asistencia_controller_1.GetAttendace);
+router.delete('/DeleteAttendance', asistencia_controller_1.DeleteAttendance);
 //endpoints para los cursos
 router.post('/NewGrade', curso_controller_1.NewGrade);
 router.get('/getGrades', curso_controller_1.getGrades);

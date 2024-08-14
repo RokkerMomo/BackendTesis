@@ -58,14 +58,21 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
   }
 
 
+  function addMinutes(time:any, minsToAdd:any) {
+    function D(J:any){ return (J<10? '0':'') + J;};
+    var piece = time.split(':');
+    var mins = piece[0]*60 + +piece[1] + +minsToAdd;
+  
+    return D(mins%(24*60)/60 | 0) + ':' + D(mins%60) + ":00";  
+  }
+
 
 
   export const NewAttendanceEdit = async (req:Request,res:Response):Promise<Response> => {
-    if (!req.body.id || !req.body.fecha){
+    if (!req.body.id || !req.body.fecha || !req.body.time){
         return res.status(400).json({msg:'Error no llegaron todos los datos'})
     }
     const today = new Date(req.body.fecha)
-    console.log(today)
     const alumno:any = await alumnos.findOne({_id:req.body.id})
     if (!alumno) {
         return res.status(400).json({msg:'Alumno no encontrado'});
@@ -87,16 +94,13 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
 
     for (let index = 0; index < Class.length; index++) {
         if (
-            today.getDate()>StartDate.getDate()-1 && 
-            today.getDate()<FinalDate.getDate()+1 && 
-            today.getMonth()==StartDate.getMonth() && 
+            today >= StartDate && 
+            today <=FinalDate && 
             Class[index].dia==weekday[today.getDay()] 
-
           ) {
     
         }else{
-            console.log(today.getDate())
-            console.log(StartDate)
+        
             return res.status(400).json({msg:'El alumno no tiene clase ese dia'});
         }
         
@@ -110,14 +114,55 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
         return res.status(400).json({msg:'El alumno ya ingreso el dia de hoy'});
     }
     //GUARDAR asistencia
-    const payload = {
-    id_alumno:alumno._id,
-    id_curso:alumno.id_curso,
-    fecha:req.body.fecha,
-    hora:Class[0].horaStart
+    if (req.body.time == "on time") {
+        const payload = {
+            id_alumno:alumno._id,
+            id_curso:alumno.id_curso,
+            fecha:req.body.fecha,
+            hora:Class[0].horaStart,
+            nota:req.body.note
+            }
+            const NewAttendance = new asistencia(payload);
+            await NewAttendance.save();
+            return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
     }
-    const NewAttendance = new asistencia(payload);
-    await NewAttendance.save();
-    return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
+    const payload = {
+        id_alumno:alumno._id,
+        id_curso:alumno.id_curso,
+        fecha:req.body.fecha,
+        hora:addMinutes(Class[0].horaStart,'30'),
+        nota:req.body.note
+        }
+        const NewAttendance = new asistencia(payload);
+        await NewAttendance.save();
+        return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
+   
+    
 
+  }
+
+
+  export const DeleteAttendance = async (req:Request, res:Response):Promise<Response> => {
+
+    if (!req.body.id_alumno || !req.body.fecha || !req.body.id_curso) {
+
+        return res.status(400).json({msg:"ingrese todos los datos"})
+    }
+
+    const attendance = await asistencia.findOne({
+        fecha:req.body.fecha,
+        id_alumno:req.body.id_alumno,
+        id_curso:req.body.id_curso})
+
+    if (!attendance) {
+        return res.status(400).json({msg:"El alumno no asistio ese dia"})
+    }
+
+    await asistencia.deleteOne({
+        fecha:req.body.fecha,
+        id_alumno:req.body.id_alumno,
+        id_curso:req.body.id_curso
+    })
+
+    return res.status(200).json({msg:"Borrado con exito"})
   }
