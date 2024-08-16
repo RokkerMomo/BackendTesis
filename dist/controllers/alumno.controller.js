@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addFingerPrint = exports.getStudentByID = exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
+exports.DeleteStudent = exports.addFingerPrint = exports.getStudentByID = exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
 const alumno_1 = __importDefault(require("../models/alumno"));
 const curso_1 = __importDefault(require("../models/curso"));
 const asistencia_1 = __importDefault(require("../models/asistencia"));
@@ -172,3 +172,17 @@ const addFingerPrint = (req, res) => __awaiter(void 0, void 0, void 0, function*
     return res.status(200).json({ student, msg: "Huella Agregada con exito" });
 });
 exports.addFingerPrint = addFingerPrint;
+const DeleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: "Ingrese el id" });
+    }
+    console.log(req.params.id);
+    const student = yield alumno_1.default.findOne({ _id: req.params.id });
+    console.log(student);
+    if (!student) {
+        return res.status(400).json({ msg: "No se escontro al alumno" });
+    }
+    yield alumno_1.default.deleteOne({ _id: req.params.id });
+    return res.status(200).json({ msg: "Alumno Eliminado" });
+});
+exports.DeleteStudent = DeleteStudent;

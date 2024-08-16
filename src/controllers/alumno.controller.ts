@@ -193,3 +193,18 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
         const student = await alumnos.findOneAndUpdate(filter, update);
         return res.status(200).json({student,msg:"Huella Agregada con exito"})
       }
+
+
+      export const DeleteStudent = async (req:Request,res:Response):Promise<Response> => {
+        if (!req.params.id) {
+            return res.status(400).json({msg:"Ingrese el id"})
+        }
+        console.log(req.params.id)
+        const student = await alumnos.findOne({_id:req.params.id})
+        console.log(student)
+        if (!student) {
+            return res.status(400).json({msg:"No se escontro al alumno"})
+        }
+        await alumnos.deleteOne({_id:req.params.id})
+        return res.status(200).json({msg:"Alumno Eliminado"})
+      }

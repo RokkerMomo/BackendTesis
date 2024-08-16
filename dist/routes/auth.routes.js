@@ -20,6 +20,7 @@ router.get('/searchstudent/:search', alumno_controller_1.SearchStudent);
 router.get('/searchstudentbygrade/:grade/:section', alumno_controller_1.SearchStudentByGrade);
 router.get('/getStundetsByTeacher/:id', alumno_controller_1.getStundetsByTeacher);
 router.put('/addFingerPrint', alumno_controller_1.addFingerPrint);
+router.delete('/DeleteStudent/:id', alumno_controller_1.DeleteStudent);
 //endpoints para las asistencias
 router.post('/NewAttendance', asistencia_controller_1.NewAttendance);
 router.post('/NewAttendanceEdit', asistencia_controller_1.NewAttendanceEdit);
