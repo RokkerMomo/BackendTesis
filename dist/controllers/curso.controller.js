@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getTeacherGrades = exports.getsections = exports.getgradebystudentID = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
+exports.EditGrade = exports.GetGrade = exports.getGradesFullData = exports.getTeacherGrades = exports.getsections = exports.getgradebystudentID = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
 const curso_1 = __importDefault(require("../models/curso"));
 const clase_1 = __importDefault(require("../models/clase"));
 const alumno_1 = __importDefault(require("../models/alumno"));
+const profesor_1 = __importDefault(require("../models/profesor"));
 const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.HoraEnd ||
         !req.body.id_profesor ||
@@ -62,7 +63,6 @@ const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             horaStart: req.body.horaStart,
             TimeFinish: req.body.HoraEnd,
         };
-        console.log(payloadClase);
         const newclase = new clase_1.default(payloadClase);
         yield newclase.save();
     }
@@ -117,3 +117,121 @@ const getTeacherGrades = (req, res) => __awaiter(void 0, void 0, void 0, functio
     return res.status(200).json(grades);
 });
 exports.getTeacherGrades = getTeacherGrades;
+//Get all grades
+const getGradesFullData = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const grades = yield curso_1.default.find();
+    const uniqueArrayUsingFilter = grades.filter((value, index, self) => {
+        return self.findIndex((obj) => obj.nombreCurso === value.nombreCurso) === index;
+    });
+    const payload = [];
+    for (let index = 0; index < uniqueArrayUsingFilter.length; index++) {
+        const students = yield alumno_1.default.find({ id_curso: uniqueArrayUsingFilter[index]._id });
+        const classes = yield clase_1.default.find({ id_curso: uniqueArrayUsingFilter[index]._id });
+        const teacher = yield profesor_1.default.findOne({ _id: uniqueArrayUsingFilter[index].id_profesor });
+        const classespayload = [];
+        for (let index = 0; index < classes.length; index++) {
+            classespayload.push(classes[index].dia);
+        }
+        const gradepayload = {
+            _id: uniqueArrayUsingFilter[index]._id,
+            id_profesor: teacher.nombrecompleto,
+            nombreCurso: uniqueArrayUsingFilter[index].nombreCurso,
+            seccion: uniqueArrayUsingFilter[index].seccion,
+            fechaInicio: uniqueArrayUsingFilter[index].fechaInicio,
+            fechaFin: uniqueArrayUsingFilter[index].fechaFin,
+            starttime: classes[0].horaStart,
+            endtime: classes[0].TimeFinish,
+            duracionCurso: uniqueArrayUsingFilter[index].duracionCurso,
+            totalClases: uniqueArrayUsingFilter[index].totalClases,
+            students: students.length,
+            classes: classespayload
+        };
+        payload.push(gradepayload);
+    }
+    return res.status(200).json(payload);
+});
+exports.getGradesFullData = getGradesFullData;
+//Get all grades
+const GetGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+    }
+    const grade = yield curso_1.default.findOne({ _id: req.params.id });
+    const payload = [];
+    const classes = yield clase_1.default.find({ id_curso: grade._id });
+    const teacher = yield profesor_1.default.findOne({ _id: grade.id_profesor });
+    const classespayload = [];
+    for (let index = 0; index < classes.length; index++) {
+        classespayload.push(classes[index].dia);
+    }
+    const gradepayload = {
+        _id: grade._id,
+        id: teacher._id,
+        id_profesor: teacher.nombrecompleto,
+        nombreCurso: grade.nombreCurso,
+        seccion: grade.seccion,
+        fechaInicio: grade.fechaInicio,
+        fechaFin: grade.fechaFin,
+        starttime: classes[0].horaStart,
+        endtime: classes[0].TimeFinish,
+        duracionCurso: grade.duracionCurso,
+        totalClases: grade.totalClases,
+        classes: classespayload
+    };
+    payload.push(gradepayload);
+    return res.status(200).json(payload);
+});
+exports.GetGrade = GetGrade;
+const EditGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.body.HoraEnd ||
+        !req.body.id_profesor ||
+        !req.body.nombreCurso ||
+        !req.body.seccion ||
+        !req.body.fechaInicio ||
+        !req.body.duracionCurso) {
+        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+    }
+    const grade = yield curso_1.default.findOne({ $and: [
+            { nombreCurso: req.body.nombreCurso },
+            { seccion: req.body.seccion }
+        ] });
+    if (grade) {
+        return res.status(400).json({ msg: 'El Curso que ingreso ya existe' });
+    }
+    //GUARDAR Curso
+    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const total = req.body.duracionCurso * req.body.dias.length;
+    let diasTotales = total - 1;
+    let fechaFin = new Date(req.body.fechaInicio);
+    while (diasTotales > 0) {
+        fechaFin.setDate(fechaFin.getDate() + 1);
+        if (req.body.dias.includes(weekday[fechaFin.getDay()])) {
+            diasTotales--;
+        }
+    }
+    const FechaFinal = fechaFin.toLocaleDateString();
+    const filter = { _id: req.body.id };
+    const update = {
+        id_profesor: req.body.id_profesor,
+        nombreCurso: req.body.nombreCurso,
+        seccion: req.body.seccion,
+        fechaInicio: req.body.fechaInicio,
+        fechaFin: FechaFinal,
+        duracionCurso: req.body.duracionCurso,
+        totalClases: total
+    };
+    const doc = yield curso_1.default.findOneAndUpdate(filter, update);
+    yield clase_1.default.deleteMany({ id_curso: req.body.id });
+    for (let index = 0; index < req.body.dias.length; index++) {
+        const payloadClase = {
+            id_curso: doc._id,
+            dia: req.body.dias[index],
+            horaStart: req.body.horaStart,
+            TimeFinish: req.body.HoraEnd,
+        };
+        const newclase = new clase_1.default(payloadClase);
+        yield newclase.save();
+    }
+    return res.status(200).json({ doc, msg: "Edited Successfully" });
+});
+exports.EditGrade = EditGrade;
