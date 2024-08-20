@@ -20,12 +20,12 @@ const curso_1 = __importDefault(require("../models/curso"));
 //Registrar asistencia
 const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.idHuella) {
-        return res.status(400).json({ msg: 'Error no llegaron todos los datos' });
+        return res.status(400).json({ msg: 'Not all the data arrived' });
     }
     const today = new Date();
     const alumno = yield alumno_1.default.findOne({ idHuella: req.body.idHuella });
     if (!alumno) {
-        return res.status(400).json({ msg: 'Esa huella no esta asignada a ningun alumno' });
+        return res.status(400).json({ msg: 'That fingerprint is not assigned to any student.' });
     }
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const Class = yield clase_1.default.find(({ $and: [
@@ -33,12 +33,12 @@ const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             { dia: weekday[today.getDay()] }
         ] }));
     if (Class.length == 0) {
-        return res.status(400).json({ msg: 'El alumno no tiene clase hoy' });
+        return res.status(400).json({ msg: 'The student does not have class today' });
     }
     if (today.toLocaleTimeString('en-GB') > Class[0].horaStart && today.toLocaleTimeString('en-GB') < Class[0].TimeFinish) {
         const Asistencia = yield asistencia_1.default.findOne({ id_alumno: alumno._id, fecha: today.toLocaleDateString() });
         if (Asistencia) {
-            return res.status(400).json({ msg: 'El alumno ya ingreso el dia de hoy' });
+            return res.status(400).json({ msg: 'The student already entered today' });
         }
         //GUARDAR asistencia
         const payload = {
@@ -49,20 +49,20 @@ const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         };
         const NewAttendance = new asistencia_1.default(payload);
         yield NewAttendance.save();
-        return res.status(200).json({ NewAttendance, msg: 'Asistencia registrada exitosamente' });
+        return res.status(200).json({ NewAttendance, msg: 'Successfully registered attendance' });
     }
     else {
-        return res.status(400).json({ msg: 'No es Hora de Clase' });
+        return res.status(400).json({ msg: `It's not class time` });
     }
 });
 exports.NewAttendance = NewAttendance;
 //Get all students
 const GetAttendace = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: 'Ingrese el id del alumno a evaluar' });
+        return res.status(400).json({ msg: 'Enter the ID of the student to evaluate' });
     }
     const attendance = yield asistencia_1.default.find({ id_alumno: req.params.id });
-    return res.status(200).json({ msg: `Asistencias del alumno con id : ${req.params.id}`, attendance });
+    return res.status(200).json({ msg: `Student attendance with ID : ${req.params.id}`, attendance });
 });
 exports.GetAttendace = GetAttendace;
 function addMinutes(time, minsToAdd) {
@@ -74,12 +74,12 @@ function addMinutes(time, minsToAdd) {
 }
 const NewAttendanceEdit = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.id || !req.body.fecha || !req.body.time) {
-        return res.status(400).json({ msg: 'Error no llegaron todos los datos' });
+        return res.status(400).json({ msg: 'Error not all data arrived' });
     }
     const today = new Date(req.body.fecha);
     const alumno = yield alumno_1.default.findOne({ _id: req.body.id });
     if (!alumno) {
-        return res.status(400).json({ msg: 'Alumno no encontrado' });
+        return res.status(400).json({ msg: 'Student not found' });
     }
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const Class = yield clase_1.default.find(({ $and: [
@@ -87,7 +87,7 @@ const NewAttendanceEdit = (req, res) => __awaiter(void 0, void 0, void 0, functi
             { dia: weekday[today.getDay()] }
         ] }));
     if (Class.length == 0) {
-        return res.status(400).json({ msg: 'El alumno no tiene clase ese dia' });
+        return res.status(400).json({ msg: 'The student does not have class that day' });
     }
     const grade = yield curso_1.default.find({ _id: alumno.id_curso });
     const StartDate = new Date(grade[0].fechaInicio);
@@ -98,12 +98,12 @@ const NewAttendanceEdit = (req, res) => __awaiter(void 0, void 0, void 0, functi
             Class[index].dia == weekday[today.getDay()]) {
         }
         else {
-            return res.status(400).json({ msg: 'El alumno no tiene clase ese dia' });
+            return res.status(400).json({ msg: 'The student does not have class that day' });
         }
     }
     const Asistencia = yield asistencia_1.default.findOne({ id_alumno: alumno._id, fecha: today.toLocaleDateString() });
     if (Asistencia) {
-        return res.status(400).json({ msg: 'El alumno ya ingreso el dia de hoy' });
+        return res.status(400).json({ msg: 'The student already entered today' });
     }
     //GUARDAR asistencia
     if (req.body.time == "on time") {
@@ -116,7 +116,7 @@ const NewAttendanceEdit = (req, res) => __awaiter(void 0, void 0, void 0, functi
         };
         const NewAttendance = new asistencia_1.default(payload);
         yield NewAttendance.save();
-        return res.status(200).json({ NewAttendance, msg: 'Asistencia registrada exitosamente' });
+        return res.status(200).json({ NewAttendance, msg: 'Successfully registered attendance' });
     }
     const payload = {
         id_alumno: alumno._id,
@@ -127,12 +127,12 @@ const NewAttendanceEdit = (req, res) => __awaiter(void 0, void 0, void 0, functi
     };
     const NewAttendance = new asistencia_1.default(payload);
     yield NewAttendance.save();
-    return res.status(200).json({ NewAttendance, msg: 'Asistencia registrada exitosamente' });
+    return res.status(200).json({ NewAttendance, msg: 'Successfully registered attendance' });
 });
 exports.NewAttendanceEdit = NewAttendanceEdit;
 const DeleteAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.id_alumno || !req.body.fecha || !req.body.id_curso) {
-        return res.status(400).json({ msg: "ingrese todos los datos" });
+        return res.status(400).json({ msg: "Enter all data" });
     }
     const attendance = yield asistencia_1.default.findOne({
         fecha: req.body.fecha,
@@ -140,13 +140,13 @@ const DeleteAttendance = (req, res) => __awaiter(void 0, void 0, void 0, functio
         id_curso: req.body.id_curso
     });
     if (!attendance) {
-        return res.status(400).json({ msg: "El alumno no asistio ese dia" });
+        return res.status(400).json({ msg: "The student did not attend that day" });
     }
     yield asistencia_1.default.deleteOne({
         fecha: req.body.fecha,
         id_alumno: req.body.id_alumno,
         id_curso: req.body.id_curso
     });
-    return res.status(200).json({ msg: "Borrado con exito" });
+    return res.status(200).json({ msg: "Deleted successfully" });
 });
 exports.DeleteAttendance = DeleteAttendance;

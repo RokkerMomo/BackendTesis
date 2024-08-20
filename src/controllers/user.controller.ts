@@ -17,22 +17,22 @@ return jwt.sign({id:user.id, usuario:user.usuario},config.jwtSecret,{
 //REGISTRO
 export const signUp = async (req: Request,res: Response): Promise<Response> =>{
     if (!req.body.usuario || !req.body.password){
-        return res.status(400).json({msg:'Asegurese de ingresar el usuario y la contraseña'})
+        return res.status(400).json({msg:'Make sure you enter the username and password'})
     }
     const user = await usuarios.findOne({usuario:req.body.usuario});
     if(user){
-        return res.status(400).json({msg:'El Usuario que ingreso ya existe'});
+        return res.status(400).json({msg:'The User you entered already exists'});
     }
     //GUARDAR USUARIO
     const newUser = new usuarios(req.body);
     await newUser.save();
-    return res.status(201).json({newUser,msg:'Usuario Registrado Correctamente'});
+    return res.status(201).json({newUser,msg:'Correctly Registered User'});
 }
 
 //LOGIN
 export const signIn = async (req: Request,res: Response): Promise<Response> => {
     if (!req.body.usuario || !req.body.password) {
-      return res.status(400).json({ msg: "Asegurese de ingresar el usuario y la contraseña" });
+      return res.status(400).json({ msg: "Make sure you enter the username and password" });
     }
     const user = await usuarios.findOne({usuario:req.body.usuario});
     const teacher = await profesor.findOne({usuario:req.body.usuario});
@@ -43,7 +43,7 @@ export const signIn = async (req: Request,res: Response): Promise<Response> => {
 
       if (!isMatch) {
        //DEVOLVER RESPUETA
-        return res.status(400).json({msg: "El Usuario o la contraseña son incorrectos"});
+        return res.status(400).json({msg: "The username or password is incorrect"});
       }
   
        //DEVOLVER TOKEN
@@ -55,13 +55,13 @@ export const signIn = async (req: Request,res: Response): Promise<Response> => {
 
       if (!isMatch) {
        //DEVOLVER RESPUETA
-        return res.status(400).json({msg: "El Usuario o la contraseña son incorrectos"});
+        return res.status(400).json({msg: "The username or password is incorrect"});
       }
   
        //DEVOLVER TOKEN
       return res.status(201).json({ teacher,token: createToken(teacher),rol:1 });
       } else {
-        return res.status(400).json({ msg: "El usuario no existe" });
+        return res.status(400).json({ msg: "The user does not exist" });
       }
     }
    

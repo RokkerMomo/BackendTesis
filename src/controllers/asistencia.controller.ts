@@ -7,12 +7,12 @@ import cursos,{ Igrade } from "../models/curso";
 //Registrar asistencia
 export const NewAttendance = async (req: Request,res: Response): Promise<Response> =>{
     if (!req.body.idHuella){
-        return res.status(400).json({msg:'Error no llegaron todos los datos'})
+        return res.status(400).json({msg:'Not all the data arrived'})
     }
     const today = new Date()
     const alumno:any = await alumnos.findOne({idHuella:req.body.idHuella})
     if (!alumno) {
-        return res.status(400).json({msg:'Esa huella no esta asignada a ningun alumno'});
+        return res.status(400).json({msg:'That fingerprint is not assigned to any student.'});
     }
 
     const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -22,7 +22,7 @@ export const NewAttendance = async (req: Request,res: Response): Promise<Respons
         {dia: weekday[today.getDay()]}
     ]}))
     if (Class.length==0) {
-        return res.status(400).json({msg:'El alumno no tiene clase hoy'});
+        return res.status(400).json({msg:'The student does not have class today'});
     }
     
     if (today.toLocaleTimeString('en-GB')>Class[0].horaStart && today.toLocaleTimeString('en-GB')<Class[0].TimeFinish) {
@@ -30,7 +30,7 @@ export const NewAttendance = async (req: Request,res: Response): Promise<Respons
         const Asistencia = await asistencia.findOne({id_alumno: alumno._id, fecha: today.toLocaleDateString()})
 
     if(Asistencia){
-        return res.status(400).json({msg:'El alumno ya ingreso el dia de hoy'});
+        return res.status(400).json({msg:'The student already entered today'});
     }
     //GUARDAR asistencia
     const payload = {
@@ -41,20 +41,20 @@ export const NewAttendance = async (req: Request,res: Response): Promise<Respons
     }
     const NewAttendance = new asistencia(payload);
     await NewAttendance.save();
-    return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
+    return res.status(200).json({NewAttendance,msg:'Successfully registered attendance'});
 
     }else{
-        return res.status(400).json({msg:'No es Hora de Clase'});
+        return res.status(400).json({msg:`It's not class time`});
     }
 }
 
 //Get all students
 export const GetAttendace = async (req : Request, res: Response):Promise<Response>=>{
     if (!req.params.id){
-        return res.status(400).json({msg:'Ingrese el id del alumno a evaluar'})
+        return res.status(400).json({msg:'Enter the ID of the student to evaluate'})
     }
     const attendance = await asistencia.find({id_alumno:req.params.id});
-    return res.status(200).json({msg:`Asistencias del alumno con id : ${req.params.id}`, attendance})
+    return res.status(200).json({msg:`Student attendance with ID : ${req.params.id}`, attendance})
   }
 
 
@@ -70,12 +70,12 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
 
   export const NewAttendanceEdit = async (req:Request,res:Response):Promise<Response> => {
     if (!req.body.id || !req.body.fecha || !req.body.time){
-        return res.status(400).json({msg:'Error no llegaron todos los datos'})
+        return res.status(400).json({msg:'Error not all data arrived'})
     }
     const today = new Date(req.body.fecha)
     const alumno:any = await alumnos.findOne({_id:req.body.id})
     if (!alumno) {
-        return res.status(400).json({msg:'Alumno no encontrado'});
+        return res.status(400).json({msg:'Student not found'});
     }
 
     const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -85,7 +85,7 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
         {dia: weekday[today.getDay()]}
     ]}))
     if (Class.length==0) {
-        return res.status(400).json({msg:'El alumno no tiene clase ese dia'});
+        return res.status(400).json({msg:'The student does not have class that day'});
     }
 
     const grade:any = await cursos.find({_id:alumno.id_curso});
@@ -101,7 +101,7 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
     
         }else{
         
-            return res.status(400).json({msg:'El alumno no tiene clase ese dia'});
+            return res.status(400).json({msg:'The student does not have class that day'});
         }
         
       }
@@ -111,7 +111,7 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
         const Asistencia = await asistencia.findOne({id_alumno: alumno._id, fecha: today.toLocaleDateString()})
 
     if(Asistencia){
-        return res.status(400).json({msg:'El alumno ya ingreso el dia de hoy'});
+        return res.status(400).json({msg:'The student already entered today'});
     }
     //GUARDAR asistencia
     if (req.body.time == "on time") {
@@ -124,7 +124,7 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
             }
             const NewAttendance = new asistencia(payload);
             await NewAttendance.save();
-            return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
+            return res.status(200).json({NewAttendance,msg:'Successfully registered attendance'});
     }
     const payload = {
         id_alumno:alumno._id,
@@ -135,7 +135,7 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
         }
         const NewAttendance = new asistencia(payload);
         await NewAttendance.save();
-        return res.status(200).json({NewAttendance,msg:'Asistencia registrada exitosamente'});
+        return res.status(200).json({NewAttendance,msg:'Successfully registered attendance'});
    
     
 
@@ -146,7 +146,7 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
 
     if (!req.body.id_alumno || !req.body.fecha || !req.body.id_curso) {
 
-        return res.status(400).json({msg:"ingrese todos los datos"})
+        return res.status(400).json({msg:"Enter all data"})
     }
 
     const attendance = await asistencia.findOne({
@@ -155,7 +155,7 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
         id_curso:req.body.id_curso})
 
     if (!attendance) {
-        return res.status(400).json({msg:"El alumno no asistio ese dia"})
+        return res.status(400).json({msg:"The student did not attend that day"})
     }
 
     await asistencia.deleteOne({
@@ -164,5 +164,5 @@ export const GetAttendace = async (req : Request, res: Response):Promise<Respons
         id_curso:req.body.id_curso
     })
 
-    return res.status(200).json({msg:"Borrado con exito"})
+    return res.status(200).json({msg:"Deleted successfully"})
   }

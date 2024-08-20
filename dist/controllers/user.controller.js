@@ -26,22 +26,22 @@ function createToken(user) {
 //REGISTRO
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.usuario || !req.body.password) {
-        return res.status(400).json({ msg: 'Asegurese de ingresar el usuario y la contraseña' });
+        return res.status(400).json({ msg: 'Make sure you enter the username and password' });
     }
     const user = yield user_1.default.findOne({ usuario: req.body.usuario });
     if (user) {
-        return res.status(400).json({ msg: 'El Usuario que ingreso ya existe' });
+        return res.status(400).json({ msg: 'The User you entered already exists' });
     }
     //GUARDAR USUARIO
     const newUser = new user_1.default(req.body);
     yield newUser.save();
-    return res.status(201).json({ newUser, msg: 'Usuario Registrado Correctamente' });
+    return res.status(201).json({ newUser, msg: 'Correctly Registered User' });
 });
 exports.signUp = signUp;
 //LOGIN
 const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.usuario || !req.body.password) {
-        return res.status(400).json({ msg: "Asegurese de ingresar el usuario y la contraseña" });
+        return res.status(400).json({ msg: "Make sure you enter the username and password" });
     }
     const user = yield user_1.default.findOne({ usuario: req.body.usuario });
     const teacher = yield profesor_1.default.findOne({ usuario: req.body.usuario });
@@ -49,7 +49,7 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const isMatch = yield user.comparePassword(req.body.password);
         if (!isMatch) {
             //DEVOLVER RESPUETA
-            return res.status(400).json({ msg: "El Usuario o la contraseña son incorrectos" });
+            return res.status(400).json({ msg: "The username or password is incorrect" });
         }
         //DEVOLVER TOKEN
         return res.status(201).json({ user, token: createToken(user), rol: 0 });
@@ -59,13 +59,13 @@ const signIn = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             const isMatch = yield teacher.comparePassword(req.body.password);
             if (!isMatch) {
                 //DEVOLVER RESPUETA
-                return res.status(400).json({ msg: "El Usuario o la contraseña son incorrectos" });
+                return res.status(400).json({ msg: "The username or password is incorrect" });
             }
             //DEVOLVER TOKEN
             return res.status(201).json({ teacher, token: createToken(teacher), rol: 1 });
         }
         else {
-            return res.status(400).json({ msg: "El usuario no existe" });
+            return res.status(400).json({ msg: "The user does not exist" });
         }
     }
 });

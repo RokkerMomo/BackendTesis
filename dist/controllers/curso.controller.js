@@ -24,14 +24,14 @@ const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         !req.body.seccion ||
         !req.body.fechaInicio ||
         !req.body.duracionCurso) {
-        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
     const grade = yield curso_1.default.findOne({ $and: [
             { nombreCurso: req.body.nombreCurso },
             { seccion: req.body.seccion }
         ] });
     if (grade) {
-        return res.status(400).json({ msg: 'El Curso que ingreso ya existe' });
+        return res.status(400).json({ msg: 'The Grade entered already exists' });
     }
     //GUARDAR Curso
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -66,7 +66,7 @@ const NewGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const newclase = new clase_1.default(payloadClase);
         yield newclase.save();
     }
-    return res.status(201).json({ newCurso, msg: 'Curso registrado correctamente' });
+    return res.status(201).json({ newCurso, msg: 'Successfully registered grade' });
 });
 exports.NewGrade = NewGrade;
 //Get all grades
@@ -81,7 +81,7 @@ exports.getGrades = getGrades;
 //Get all grades
 const getstudentgrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
     const grade = yield curso_1.default.find({ _id: req.params.id });
     return res.status(200).json(grade);
@@ -89,7 +89,7 @@ const getstudentgrade = (req, res) => __awaiter(void 0, void 0, void 0, function
 exports.getstudentgrade = getstudentgrade;
 const getgradebystudentID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
     const Students = yield alumno_1.default.findOne({ _id: req.params.id });
     const grade = yield curso_1.default.find({ _id: Students.id_curso });
@@ -100,7 +100,7 @@ exports.getgradebystudentID = getgradebystudentID;
 //Get all sections
 const getsections = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: 'Ingrese el id del curso' });
+        return res.status(400).json({ msg: 'Enter the grade id' });
     }
     const grades = yield curso_1.default.find({ nombreCurso: req.params.id });
     return res.status(200).json(grades);
@@ -108,11 +108,11 @@ const getsections = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.getsections = getsections;
 const getTeacherGrades = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: "Asegurese de ingresar el id del profesor" });
+        return res.status(400).json({ msg: "Make sure you enter the teacher's ID" });
     }
     const grades = yield curso_1.default.find({ id_profesor: req.params.id });
     if (grades.length == 0) {
-        return res.status(400).json({ msg: "El profesor no tiene cursos asignados" });
+        return res.status(400).json({ msg: "The teacher has no assigned grades" });
     }
     return res.status(200).json(grades);
 });
@@ -154,7 +154,7 @@ exports.getGradesFullData = getGradesFullData;
 //Get all grades
 const GetGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
     const grade = yield curso_1.default.findOne({ _id: req.params.id });
     const payload = [];
@@ -189,14 +189,14 @@ const EditGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         !req.body.seccion ||
         !req.body.fechaInicio ||
         !req.body.duracionCurso) {
-        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
     const grade = yield curso_1.default.findOne({ $and: [
             { nombreCurso: req.body.nombreCurso },
             { seccion: req.body.seccion }
         ] });
     if (grade) {
-        return res.status(400).json({ msg: 'El Curso que ingreso ya existe' });
+        return res.status(400).json({ msg: 'The Grade entered already exists' });
     }
     //GUARDAR Curso
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];

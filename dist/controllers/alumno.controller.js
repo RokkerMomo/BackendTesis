@@ -27,7 +27,7 @@ const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             { cedula: req.body.cedula }
         ] });
     if (Student) {
-        return res.status(400).json({ msg: 'El alumno ya existe, verificar cedula y nombre completo' });
+        return res.status(400).json({ msg: 'The student already exists, verify ID and full name' });
     }
     const payload = {
         nombrecompleto: req.body.nombrecompleto,
@@ -41,7 +41,7 @@ const NewStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     //GUARDAR Alumno
     const newStudent = new alumno_1.default(payload);
     yield newStudent.save();
-    return res.status(201).json({ newStudent, msg: 'Alumno registrado correctamente' });
+    return res.status(201).json({ newStudent, msg: 'Student registered correctly' });
 });
 exports.NewStudent = NewStudent;
 //Buscar alumno por cedula o por nombre
@@ -52,7 +52,7 @@ const SearchStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             { cedula: req.params.search }
         ] });
     if (Students.length === 0) {
-        return res.status(400).json({ msg: "no se encontro ningun alumno" });
+        return res.status(400).json({ msg: "No student found" });
     }
     return res.status(201).json(Students);
 });
@@ -66,7 +66,7 @@ const SearchStudentByGrade = (req, res) => __awaiter(void 0, void 0, void 0, fun
             { seccion: req.params.section }
         ] });
     if (Students.length === 0) {
-        return res.status(400).json({ msg: "no hay alumnos en esa seccion" });
+        return res.status(400).json({ msg: "There are no students in that section" });
     }
     return res.status(200).json(Students);
 });
@@ -79,7 +79,7 @@ const getallStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.getallStudent = getallStudent;
 const getStundetsByTeacher = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
     const grades = yield curso_1.default.find({ id_profesor: req.params.id });
     const payload = [];
@@ -111,7 +111,7 @@ const getStundetsByTeacher = (req, res) => __awaiter(void 0, void 0, void 0, fun
         return res.status(200).json(payload);
     }
     else {
-        return res.status(400).json({ msg: "Profesor no tiene alumnos" });
+        return res.status(400).json({ msg: "Teacher has no students" });
     }
 });
 exports.getStundetsByTeacher = getStundetsByTeacher;
@@ -147,42 +147,42 @@ const getallStudents = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(200).json(payload);
     }
     else {
-        return res.status(400).json({ msg: "No hay alumnos" });
+        return res.status(400).json({ msg: "There are no students" });
     }
 });
 exports.getallStudents = getallStudents;
 const getStudentByID = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: "Ingrese el id del alumno" });
+        return res.status(400).json({ msg: "Enter the student ID" });
     }
     const student = yield alumno_1.default.findOne({ _id: req.params.id });
     if (!student) {
-        return res.status(400).json({ msg: "El id ingresado no existe" });
+        return res.status(400).json({ msg: "The entered id does not exist" });
     }
     return res.status(200).json(student);
 });
 exports.getStudentByID = getStudentByID;
 const addFingerPrint = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.id || !req.body.huella) {
-        return res.status(400).json({ msg: "Ingrese todos los datos" });
+        return res.status(400).json({ msg: "Enter all data" });
     }
     const filter = { _id: req.body.id };
     const update = { idHuella: req.body.huella };
     const student = yield alumno_1.default.findOneAndUpdate(filter, update);
-    return res.status(200).json({ student, msg: "Huella Agregada con exito" });
+    return res.status(200).json({ student, msg: "Successfully Added Footprint" });
 });
 exports.addFingerPrint = addFingerPrint;
 const DeleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.params.id) {
-        return res.status(400).json({ msg: "Ingrese el id" });
+        return res.status(400).json({ msg: "Enter the id" });
     }
     console.log(req.params.id);
     const student = yield alumno_1.default.findOne({ _id: req.params.id });
     console.log(student);
     if (!student) {
-        return res.status(400).json({ msg: "No se escontro al alumno" });
+        return res.status(400).json({ msg: "The student was not found" });
     }
     yield alumno_1.default.deleteOne({ _id: req.params.id });
-    return res.status(200).json({ msg: "Alumno Eliminado" });
+    return res.status(200).json({ msg: "Eliminated Student" });
 });
 exports.DeleteStudent = DeleteStudent;

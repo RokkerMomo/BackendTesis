@@ -16,7 +16,7 @@ export const NewStudent = async (req: Request,res: Response): Promise<Response> 
         {cedula: req.body.cedula}
     ]}) 
     if(Student){
-        return res.status(400).json({msg:'El alumno ya existe, verificar cedula y nombre completo'});
+        return res.status(400).json({msg:'The student already exists, verify ID and full name'});
     }
     const payload = {
         nombrecompleto:req.body.nombrecompleto,
@@ -30,7 +30,7 @@ export const NewStudent = async (req: Request,res: Response): Promise<Response> 
     //GUARDAR Alumno
     const newStudent = new alumnos(payload);
     await newStudent.save();
-    return res.status(201).json({newStudent,msg:'Alumno registrado correctamente'});
+    return res.status(201).json({newStudent,msg:'Student registered correctly'});
 }
 
 //Buscar alumno por cedula o por nombre
@@ -41,7 +41,7 @@ export const SearchStudent = async (req : Request, res: Response):Promise<Respon
         {cedula: req.params.search}
     ]});
     if (Students.length===0) {
-        return res.status(400).json({msg:"no se encontro ningun alumno"})
+        return res.status(400).json({msg:"No student found"})
     }
     return res.status(201).json(Students)
   }
@@ -58,7 +58,7 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
         {seccion: req.params.section}
     ]});
     if (Students.length===0) {
-        return res.status(400).json({msg:"no hay alumnos en esa seccion"})
+        return res.status(400).json({msg:"There are no students in that section"})
     }
     return res.status(200).json(Students)
   }
@@ -73,7 +73,7 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
 
   export const getStundetsByTeacher = async (req: Request, res:Response):Promise<Response>=>{
     if (!req.params.id){
-        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+        return res.status(400).json({msg:'Make sure all the data is there'})
     }
 
     const grades:any = await cursos.find({id_profesor:req.params.id})
@@ -117,7 +117,7 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
     if (payload.length!=0) {
         return res.status(200).json(payload)
     }else{
-        return res.status(400).json({msg:"Profesor no tiene alumnos"})
+        return res.status(400).json({msg:"Teacher has no students"})
     }
     
   }
@@ -165,7 +165,7 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
         if (payload.length!=0) {
             return res.status(200).json(payload)
         }else{
-            return res.status(400).json({msg:"No hay alumnos"})
+            return res.status(400).json({msg:"There are no students"})
         }
 
       }
@@ -173,12 +173,12 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
       export const getStudentByID = async (req:Request,res:Response):Promise<Response> => {
 
         if (!req.params.id) {
-            return res.status(400).json({msg:"Ingrese el id del alumno"})
+            return res.status(400).json({msg:"Enter the student ID"})
         }
         const student = await alumnos.findOne({_id:req.params.id})
 
         if (!student) {
-            return res.status(400).json({msg:"El id ingresado no existe"})
+            return res.status(400).json({msg:"The entered id does not exist"})
         }
         return res.status(200).json(student)
       }
@@ -186,25 +186,25 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
 
       export const addFingerPrint = async (req:Request,res:Response):Promise<Response> => {
         if (!req.body.id || !req.body.huella) {
-            return res.status(400).json({msg:"Ingrese todos los datos"})
+            return res.status(400).json({msg:"Enter all data"})
         }
         const filter = { _id: req.body.id };
         const update = { idHuella: req.body.huella };
         const student = await alumnos.findOneAndUpdate(filter, update);
-        return res.status(200).json({student,msg:"Huella Agregada con exito"})
+        return res.status(200).json({student,msg:"Successfully Added Footprint"})
       }
 
 
       export const DeleteStudent = async (req:Request,res:Response):Promise<Response> => {
         if (!req.params.id) {
-            return res.status(400).json({msg:"Ingrese el id"})
+            return res.status(400).json({msg:"Enter the id"})
         }
         console.log(req.params.id)
         const student = await alumnos.findOne({_id:req.params.id})
         console.log(student)
         if (!student) {
-            return res.status(400).json({msg:"No se escontro al alumno"})
+            return res.status(400).json({msg:"The student was not found"})
         }
         await alumnos.deleteOne({_id:req.params.id})
-        return res.status(200).json({msg:"Alumno Eliminado"})
+        return res.status(200).json({msg:"Eliminated Student"})
       }

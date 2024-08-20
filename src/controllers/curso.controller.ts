@@ -13,14 +13,14 @@ export const NewGrade = async (req:Request,res:Response):Promise<Response> => {
         !req.body.fechaInicio || 
         !req.body.duracionCurso
 ){
-        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+        return res.status(400).json({msg:'Make sure all the data is there'})
     }
     const grade = await cursos.findOne({$and: [
         {nombreCurso: req.body.nombreCurso},
         {seccion: req.body.seccion}
     ]});
     if(grade){
-        return res.status(400).json({msg:'El Curso que ingreso ya existe'});
+        return res.status(400).json({msg:'The Grade entered already exists'});
     }
     //GUARDAR Curso
     const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -67,7 +67,7 @@ export const NewGrade = async (req:Request,res:Response):Promise<Response> => {
         await newclase.save();
     }
     
-    return res.status(201).json({newCurso,msg:'Curso registrado correctamente'});
+    return res.status(201).json({newCurso,msg:'Successfully registered grade'});
 
 }
 
@@ -85,7 +85,7 @@ export const getGrades = async (req : Request, res: Response):Promise<Response>=
   //Get all grades
 export const getstudentgrade = async (req : Request, res: Response):Promise<Response>=>{
     if (!req.params.id){
-        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+        return res.status(400).json({msg:'Make sure all the data is there'})
     }
     const grade = await cursos.find({_id:req.params.id});
     return res.status(200).json(grade)
@@ -93,7 +93,7 @@ export const getstudentgrade = async (req : Request, res: Response):Promise<Resp
 
   export const getgradebystudentID = async (req : Request, res: Response):Promise<Response> => {
     if (!req.params.id){
-        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+        return res.status(400).json({msg:'Make sure all the data is there'})
     }
     const Students:any = await alumnos.findOne({_id:req.params.id});
     const grade:any = await cursos.find({_id:Students.id_curso});
@@ -104,7 +104,7 @@ export const getstudentgrade = async (req : Request, res: Response):Promise<Resp
   //Get all sections
 export const getsections = async (req : Request, res: Response):Promise<Response>=>{
     if (!req.params.id){
-        return res.status(400).json({msg:'Ingrese el id del curso'})
+        return res.status(400).json({msg:'Enter the grade id'})
     }
     const grades = await cursos.find({nombreCurso:req.params.id});
     return res.status(200).json(grades)
@@ -113,11 +113,11 @@ export const getsections = async (req : Request, res: Response):Promise<Response
 
 export const getTeacherGrades = async (req:Request,res:Response):Promise<Response>=>{
     if (!req.params.id) {
-        return res.status(400).json({msg:"Asegurese de ingresar el id del profesor"})
+        return res.status(400).json({msg:"Make sure you enter the teacher's ID"})
     }
     const grades = await cursos.find({id_profesor: req.params.id});
     if (grades.length==0) {
-        return res.status(400).json({msg:"El profesor no tiene cursos asignados"})
+        return res.status(400).json({msg:"The teacher has no assigned grades"})
     }
     return res.status(200).json(grades)
 }
@@ -170,7 +170,7 @@ export const getGradesFullData = async (req : Request, res: Response):Promise<Re
   //Get all grades
 export const GetGrade = async (req : Request, res: Response):Promise<Response>=>{
     if (!req.params.id) {
-        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+        return res.status(400).json({msg:'Make sure all the data is there'})
     }
     const grade:any = await cursos.findOne({_id:req.params.id});
       const payload = []
@@ -216,7 +216,7 @@ export const GetGrade = async (req : Request, res: Response):Promise<Response>=>
         !req.body.fechaInicio || 
         !req.body.duracionCurso
 ){
-        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+        return res.status(400).json({msg:'Make sure all the data is there'})
     }
     
     const grade = await cursos.findOne({$and: [
@@ -224,7 +224,7 @@ export const GetGrade = async (req : Request, res: Response):Promise<Response>=>
         {seccion: req.body.seccion}
     ]});
     if(grade){
-        return res.status(400).json({msg:'El Curso que ingreso ya existe'});
+        return res.status(400).json({msg:'The Grade entered already exists'});
     }
     //GUARDAR Curso
     const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];

@@ -3,7 +3,7 @@ import profesor,{ ITeacher } from "../models/profesor";
 
 export const newTeacher = async (req:Request,res:Response):Promise<Response> => {
     if (!req.body.nombrecompleto || !req.body.usuario|| !req.body.password){
-        return res.status(400).json({msg:'Asegurese de que esten todos los datos'})
+        return res.status(400).json({msg:'Make sure all the data is there'})
     }
 
     const Student = await profesor.findOne({$or: [

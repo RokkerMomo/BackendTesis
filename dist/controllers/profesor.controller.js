@@ -16,7 +16,7 @@ exports.getallTeachers = exports.newTeacher = void 0;
 const profesor_1 = __importDefault(require("../models/profesor"));
 const newTeacher = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.nombrecompleto || !req.body.usuario || !req.body.password) {
-        return res.status(400).json({ msg: 'Asegurese de que esten todos los datos' });
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
     const Student = yield profesor_1.default.findOne({ $or: [
             { nombrecompleto: req.body.nombrecompleto },
