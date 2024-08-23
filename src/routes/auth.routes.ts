@@ -3,7 +3,7 @@ import {signIn,signUp } from '../controllers/user.controller';
 import { addFingerPrint, DeleteStudent, getallStudent, getallStudents, getStudentByID, getStundetsByTeacher, NewStudent,SearchStudent, SearchStudentByGrade} from "../controllers/alumno.controller";
 import { DeleteAttendance, GetAttendace, NewAttendance, NewAttendanceEdit } from "../controllers/asistencia.controller";
 import { EditGrade, GetGrade, getgradebystudentID, getGrades, getGradesFullData, getsections, getstudentgrade, getTeacherGrades, NewGrade } from "../controllers/curso.controller";
-import { getallTeachers, newTeacher } from "../controllers/profesor.controller";
+import { DeleteTeacher, getallTeachers, newTeacher } from "../controllers/profesor.controller";
 import { AddFingerPrintESP32, FindESP32 } from "../controllers/ESP32.controller";
 
 const router = Router();
@@ -44,6 +44,7 @@ router.put('/EditGrade',EditGrade)
 router.get('/getTeacherGrades/:id',getTeacherGrades)
 router.post('/NewTeacher', newTeacher)
 router.get('/allTeachers', getallTeachers)
+router.delete('/DeleteTeacher/:id',DeleteTeacher)
 
 //endpooints que se comunican con el ESP32
 router.get('/AddFingerPrintESP32/:id',AddFingerPrintESP32)

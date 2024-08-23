@@ -132,21 +132,40 @@ const getGradesFullData = (req, res) => __awaiter(void 0, void 0, void 0, functi
         for (let index = 0; index < classes.length; index++) {
             classespayload.push(classes[index].dia);
         }
-        const gradepayload = {
-            _id: uniqueArrayUsingFilter[index]._id,
-            id_profesor: teacher.nombrecompleto,
-            nombreCurso: uniqueArrayUsingFilter[index].nombreCurso,
-            seccion: uniqueArrayUsingFilter[index].seccion,
-            fechaInicio: uniqueArrayUsingFilter[index].fechaInicio,
-            fechaFin: uniqueArrayUsingFilter[index].fechaFin,
-            starttime: classes[0].horaStart,
-            endtime: classes[0].TimeFinish,
-            duracionCurso: uniqueArrayUsingFilter[index].duracionCurso,
-            totalClases: uniqueArrayUsingFilter[index].totalClases,
-            students: students.length,
-            classes: classespayload
-        };
-        payload.push(gradepayload);
+        if (teacher == null) {
+            const gradepayload = {
+                _id: uniqueArrayUsingFilter[index]._id,
+                id_profesor: "No teacher assigned",
+                nombreCurso: uniqueArrayUsingFilter[index].nombreCurso,
+                seccion: uniqueArrayUsingFilter[index].seccion,
+                fechaInicio: uniqueArrayUsingFilter[index].fechaInicio,
+                fechaFin: uniqueArrayUsingFilter[index].fechaFin,
+                starttime: classes[0].horaStart,
+                endtime: classes[0].TimeFinish,
+                duracionCurso: uniqueArrayUsingFilter[index].duracionCurso,
+                totalClases: uniqueArrayUsingFilter[index].totalClases,
+                students: students.length,
+                classes: classespayload
+            };
+            payload.push(gradepayload);
+        }
+        else {
+            const gradepayload = {
+                _id: uniqueArrayUsingFilter[index]._id,
+                id_profesor: teacher.nombrecompleto,
+                nombreCurso: uniqueArrayUsingFilter[index].nombreCurso,
+                seccion: uniqueArrayUsingFilter[index].seccion,
+                fechaInicio: uniqueArrayUsingFilter[index].fechaInicio,
+                fechaFin: uniqueArrayUsingFilter[index].fechaFin,
+                starttime: classes[0].horaStart,
+                endtime: classes[0].TimeFinish,
+                duracionCurso: uniqueArrayUsingFilter[index].duracionCurso,
+                totalClases: uniqueArrayUsingFilter[index].totalClases,
+                students: students.length,
+                classes: classespayload
+            };
+            payload.push(gradepayload);
+        }
     }
     return res.status(200).json(payload);
 });
@@ -164,21 +183,40 @@ const GetGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     for (let index = 0; index < classes.length; index++) {
         classespayload.push(classes[index].dia);
     }
-    const gradepayload = {
-        _id: grade._id,
-        id: teacher._id,
-        id_profesor: teacher.nombrecompleto,
-        nombreCurso: grade.nombreCurso,
-        seccion: grade.seccion,
-        fechaInicio: grade.fechaInicio,
-        fechaFin: grade.fechaFin,
-        starttime: classes[0].horaStart,
-        endtime: classes[0].TimeFinish,
-        duracionCurso: grade.duracionCurso,
-        totalClases: grade.totalClases,
-        classes: classespayload
-    };
-    payload.push(gradepayload);
+    if (teacher == null) {
+        const gradepayload = {
+            _id: grade._id,
+            id: "No teacher assigned",
+            id_profesor: "No teacher assigned",
+            nombreCurso: grade.nombreCurso,
+            seccion: grade.seccion,
+            fechaInicio: grade.fechaInicio,
+            fechaFin: grade.fechaFin,
+            starttime: classes[0].horaStart,
+            endtime: classes[0].TimeFinish,
+            duracionCurso: grade.duracionCurso,
+            totalClases: grade.totalClases,
+            classes: classespayload
+        };
+        payload.push(gradepayload);
+    }
+    else {
+        const gradepayload = {
+            _id: grade._id,
+            id: teacher._id,
+            id_profesor: teacher.nombrecompleto,
+            nombreCurso: grade.nombreCurso,
+            seccion: grade.seccion,
+            fechaInicio: grade.fechaInicio,
+            fechaFin: grade.fechaFin,
+            starttime: classes[0].horaStart,
+            endtime: classes[0].TimeFinish,
+            duracionCurso: grade.duracionCurso,
+            totalClases: grade.totalClases,
+            classes: classespayload
+        };
+        payload.push(gradepayload);
+    }
     return res.status(200).json(payload);
 });
 exports.GetGrade = GetGrade;

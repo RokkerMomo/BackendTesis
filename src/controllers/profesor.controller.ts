@@ -26,3 +26,18 @@ export const newTeacher = async (req:Request,res:Response):Promise<Response> => 
     const teachers = await profesor.find();
     return res.status(200).json(teachers)
   }
+
+
+  export const DeleteTeacher = async (req:Request,res:Response):Promise<Response> => {
+    if (!req.params.id) {
+        return res.status(400).json({msg:"Enter the id"})
+    }
+    console.log(req.params.id)
+    const student = await profesor.findOne({_id:req.params.id})
+    console.log(student)
+    if (!student) {
+        return res.status(400).json({msg:"The Teacher was not found"})
+    }
+    await profesor.deleteOne({_id:req.params.id})
+    return res.status(200).json({msg:"Eliminated Teacher"})
+  }

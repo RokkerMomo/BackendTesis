@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getallTeachers = exports.newTeacher = void 0;
+exports.DeleteTeacher = exports.getallTeachers = exports.newTeacher = void 0;
 const profesor_1 = __importDefault(require("../models/profesor"));
 const newTeacher = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.body.nombrecompleto || !req.body.usuario || !req.body.password) {
@@ -36,3 +36,17 @@ const getallTeachers = (req, res) => __awaiter(void 0, void 0, void 0, function*
     return res.status(200).json(teachers);
 });
 exports.getallTeachers = getallTeachers;
+const DeleteTeacher = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: "Enter the id" });
+    }
+    console.log(req.params.id);
+    const student = yield profesor_1.default.findOne({ _id: req.params.id });
+    console.log(student);
+    if (!student) {
+        return res.status(400).json({ msg: "The Teacher was not found" });
+    }
+    yield profesor_1.default.deleteOne({ _id: req.params.id });
+    return res.status(200).json({ msg: "Eliminated Teacher" });
+});
+exports.DeleteTeacher = DeleteTeacher;

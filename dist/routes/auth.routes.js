@@ -39,6 +39,7 @@ router.put('/EditGrade', curso_controller_1.EditGrade);
 router.get('/getTeacherGrades/:id', curso_controller_1.getTeacherGrades);
 router.post('/NewTeacher', profesor_controller_1.newTeacher);
 router.get('/allTeachers', profesor_controller_1.getallTeachers);
+router.delete('/DeleteTeacher/:id', profesor_controller_1.DeleteTeacher);
 //endpooints que se comunican con el ESP32
 router.get('/AddFingerPrintESP32/:id', ESP32_controller_1.AddFingerPrintESP32);
 router.get('/FindESP32', ESP32_controller_1.FindESP32);
