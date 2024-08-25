@@ -13,7 +13,7 @@ export const FindESP32 = async (req : Request, res: Response):Promise<Response> 
         headers: {
           Accept: 'application/json',
         }}
-      const url = `http://192.168.1.106/findSensor`;
+      const url = `http://192.168.1.102/findSensor`;
 
       try {
         const response = await fetch(url,requestOptions);
@@ -40,7 +40,7 @@ export const FindESP32 = async (req : Request, res: Response):Promise<Response> 
         headers: {
           Accept: 'application/json',
         }}
-      const url = `http://192.168.1.106/?param1=${req.params.id}`;
+      const url = `http://192.168.1.102/?param1=${req.params.id}`;
 
       try {
         const response = await fetch(url,requestOptions);

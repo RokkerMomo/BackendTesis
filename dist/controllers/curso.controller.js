@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EditGrade = exports.GetGrade = exports.getGradesFullData = exports.getTeacherGrades = exports.getsections = exports.getgradebystudentID = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
+exports.DeleteGrade = exports.EditGrade = exports.GetGrade = exports.getGradesFullData = exports.getTeacherGrades = exports.getsections = exports.getgradebystudentID = exports.getstudentgrade = exports.getGrades = exports.NewGrade = void 0;
 const curso_1 = __importDefault(require("../models/curso"));
 const clase_1 = __importDefault(require("../models/clase"));
 const alumno_1 = __importDefault(require("../models/alumno"));
@@ -83,6 +83,9 @@ const getstudentgrade = (req, res) => __awaiter(void 0, void 0, void 0, function
     if (!req.params.id) {
         return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
+    if (req.params.id == "No Grade assigned") {
+        return res.status(200).json([{ nombreCurso: "No Grade assigned", seccion: "None" }]);
+    }
     const grade = yield curso_1.default.find({ _id: req.params.id });
     return res.status(200).json(grade);
 });
@@ -92,6 +95,9 @@ const getgradebystudentID = (req, res) => __awaiter(void 0, void 0, void 0, func
         return res.status(400).json({ msg: 'Make sure all the data is there' });
     }
     const Students = yield alumno_1.default.findOne({ _id: req.params.id });
+    if (Students.id_curso == "No Grade assigned") {
+        return res.status(400).json({ msg: "No Grade assigned" });
+    }
     const grade = yield curso_1.default.find({ _id: Students.id_curso });
     const classes = yield clase_1.default.find({ id_curso: Students.id_curso });
     return res.status(200).json({ grade, classes });
@@ -233,9 +239,9 @@ const EditGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             { nombreCurso: req.body.nombreCurso },
             { seccion: req.body.seccion }
         ] });
-    if (grade) {
-        return res.status(400).json({ msg: 'The Grade entered already exists' });
-    }
+    // if(grade){
+    //     return res.status(400).json({msg:'The Grade entered already exists'});
+    // }
     //GUARDAR Curso
     const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const total = req.body.duracionCurso * req.body.dias.length;
@@ -273,3 +279,16 @@ const EditGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(200).json({ doc, msg: "Edited Successfully" });
 });
 exports.EditGrade = EditGrade;
+const DeleteGrade = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.params.id) {
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
+    }
+    const filter = { _id: req.params.id };
+    const filter2 = { id_curso: req.params.id };
+    const update = { id_curso: "No Grade assigned" };
+    const doc = yield curso_1.default.findOneAndDelete(filter);
+    yield clase_1.default.deleteMany({ id_curso: req.params.id });
+    yield alumno_1.default.updateMany(filter2, update);
+    return res.status(200).json({ doc, msg: "Deleted Successfully" });
+});
+exports.DeleteGrade = DeleteGrade;

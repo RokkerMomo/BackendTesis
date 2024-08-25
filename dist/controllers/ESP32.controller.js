@@ -21,7 +21,7 @@ const FindESP32 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             Accept: 'application/json',
         }
     };
-    const url = `http://192.168.1.106/findSensor`;
+    const url = `http://192.168.1.102/findSensor`;
     try {
         const response = yield (0, node_fetch_1.default)(url, requestOptions);
         if (!response.ok) {
@@ -46,7 +46,7 @@ const AddFingerPrintESP32 = (req, res) => __awaiter(void 0, void 0, void 0, func
             Accept: 'application/json',
         }
     };
-    const url = `http://192.168.1.106/?param1=${req.params.id}`;
+    const url = `http://192.168.1.102/?param1=${req.params.id}`;
     try {
         const response = yield (0, node_fetch_1.default)(url, requestOptions);
         if (!response.ok) {

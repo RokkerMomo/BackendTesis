@@ -87,6 +87,9 @@ export const getstudentgrade = async (req : Request, res: Response):Promise<Resp
     if (!req.params.id){
         return res.status(400).json({msg:'Make sure all the data is there'})
     }
+    if (req.params.id=="No Grade assigned") {
+        return res.status(200).json([{nombreCurso:"No Grade assigned",seccion:"None"}])
+    }
     const grade = await cursos.find({_id:req.params.id});
     return res.status(200).json(grade)
   }
@@ -96,6 +99,9 @@ export const getstudentgrade = async (req : Request, res: Response):Promise<Resp
         return res.status(400).json({msg:'Make sure all the data is there'})
     }
     const Students:any = await alumnos.findOne({_id:req.params.id});
+    if (Students.id_curso=="No Grade assigned") {
+        return res.status(400).json({msg:"No Grade assigned"})
+    } 
     const grade:any = await cursos.find({_id:Students.id_curso});
     const classes = await clases.find({id_curso:Students.id_curso});
     return res.status(200).json({grade,classes})
@@ -270,9 +276,9 @@ export const GetGrade = async (req : Request, res: Response):Promise<Response>=>
         {nombreCurso: req.body.nombreCurso},
         {seccion: req.body.seccion}
     ]});
-    if(grade){
-        return res.status(400).json({msg:'The Grade entered already exists'});
-    }
+    // if(grade){
+    //     return res.status(400).json({msg:'The Grade entered already exists'});
+    // }
     //GUARDAR Curso
     const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
     const total = req.body.duracionCurso*req.body.dias.length
@@ -321,6 +327,31 @@ export const GetGrade = async (req : Request, res: Response):Promise<Response>=>
     }
     
     return res.status(200).json({doc,msg:"Edited Successfully"})
+
+    
+  }
+
+
+
+  export const DeleteGrade = async (req : Request, res: Response):Promise<Response>=> {
+    if (
+        !req.params.id
+){
+        return res.status(400).json({msg:'Make sure all the data is there'})
+    }
+    
+    const filter = { _id: req.params.id };
+    const filter2 = { id_curso: req.params.id };
+
+    const update ={id_curso: "No Grade assigned"}
+
+
+    const doc:any = await cursos.findOneAndDelete(filter);
+
+    await clases.deleteMany({ id_curso: req.params.id });
+    await alumnos.updateMany(filter2,update)
+    
+    return res.status(200).json({doc,msg:"Deleted Successfully"})
 
     
   }

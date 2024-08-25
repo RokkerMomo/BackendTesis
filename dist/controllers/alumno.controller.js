@@ -119,6 +119,24 @@ exports.getStundetsByTeacher = getStundetsByTeacher;
 const getallStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const grades = yield curso_1.default.find();
     const payload = [];
+    const studentsNoGrade = yield alumno_1.default.find({ id_curso: "No Grade assigned" });
+    console.log(studentsNoGrade);
+    for (let index = 0; index < studentsNoGrade.length; index++) {
+        console.log(studentsNoGrade[index]);
+        const payloadStudent = {
+            _id: studentsNoGrade[index]._id,
+            nombrecompleto: studentsNoGrade[index].nombrecompleto,
+            url_foto: studentsNoGrade[index].url_foto,
+            cedula: studentsNoGrade[index].cedula,
+            edad: studentsNoGrade[index].edad,
+            genero: studentsNoGrade[index].genero,
+            id_curso: studentsNoGrade[index].id_curso,
+            idHuella: studentsNoGrade[index].idHuella,
+            percentage: 0
+        };
+        payload.push(payloadStudent);
+    }
+    //payload.push(studentsNoGrade)
     for (let index = 0; index < grades.length; index++) {
         const student = yield alumno_1.default.find({ id_curso: grades[index]._id });
         for (let y = 0; y < student.length; y++) {

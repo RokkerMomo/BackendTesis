@@ -35,6 +35,7 @@ router.get('/getstudentgrade/:id', curso_controller_1.getstudentgrade);
 router.get('/getgradebystudentID/:id', curso_controller_1.getgradebystudentID);
 router.get('/getGradesFullData', curso_controller_1.getGradesFullData);
 router.put('/EditGrade', curso_controller_1.EditGrade);
+router.delete('/DeleteGrade/:id', curso_controller_1.DeleteGrade);
 //endpoints para los profesores
 router.get('/getTeacherGrades/:id', curso_controller_1.getTeacherGrades);
 router.post('/NewTeacher', profesor_controller_1.newTeacher);

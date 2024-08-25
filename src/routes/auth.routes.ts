@@ -2,7 +2,7 @@ import { Router } from "express";
 import {signIn,signUp } from '../controllers/user.controller';
 import { addFingerPrint, DeleteStudent, getallStudent, getallStudents, getStudentByID, getStundetsByTeacher, NewStudent,SearchStudent, SearchStudentByGrade} from "../controllers/alumno.controller";
 import { DeleteAttendance, GetAttendace, NewAttendance, NewAttendanceEdit } from "../controllers/asistencia.controller";
-import { EditGrade, GetGrade, getgradebystudentID, getGrades, getGradesFullData, getsections, getstudentgrade, getTeacherGrades, NewGrade } from "../controllers/curso.controller";
+import { DeleteGrade, EditGrade, GetGrade, getgradebystudentID, getGrades, getGradesFullData, getsections, getstudentgrade, getTeacherGrades, NewGrade } from "../controllers/curso.controller";
 import { DeleteTeacher, getallTeachers, newTeacher } from "../controllers/profesor.controller";
 import { AddFingerPrintESP32, FindESP32 } from "../controllers/ESP32.controller";
 
@@ -39,6 +39,7 @@ router.get('/getstudentgrade/:id',getstudentgrade)
 router.get('/getgradebystudentID/:id',getgradebystudentID)
 router.get('/getGradesFullData',getGradesFullData)
 router.put('/EditGrade',EditGrade)
+router.delete('/DeleteGrade/:id',DeleteGrade)
 
 //endpoints para los profesores
 router.get('/getTeacherGrades/:id',getTeacherGrades)
