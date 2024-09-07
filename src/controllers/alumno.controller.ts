@@ -227,3 +227,39 @@ export const SearchStudentByGrade = async (req : Request, res: Response):Promise
         await alumnos.deleteOne({_id:req.params.id})
         return res.status(200).json({msg:"Eliminated Student"})
       }
+
+
+      export const EditStudent = async (req : Request, res: Response):Promise<Response>=> {
+        if (
+            !req.body.nombrecompleto ||
+            !req.body.cedula || 
+            !req.body.gender|| 
+            !req.body.age ||
+            !req.body.id_curso
+    ){
+            return res.status(400).json({msg:'Make sure all the data is there'})
+        }
+        
+        const student = await alumnos.findOne({_id:req.body.id});
+        if (!student) {
+            return res.status(400).json({msg:'No student Found'})
+        }
+
+        const filter = { _id: req.body.id };
+
+        const update ={
+            nombrecompleto:req.body.nombrecompleto,
+            cedula:req.body.cedula,
+            genero:req.body.gender,
+            edad:req.body.age,
+            id_curso:req.body.id_curso,
+        }
+      
+    
+        const doc:any = await alumnos.findOneAndUpdate(filter, update);
+        
+        
+        return res.status(200).json({doc,msg:"Edited Successfully"})
+    
+        
+      }

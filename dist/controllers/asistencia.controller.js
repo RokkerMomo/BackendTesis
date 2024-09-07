@@ -58,11 +58,13 @@ const NewAttendance = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 exports.NewAttendance = NewAttendance;
 //Get all students
 const GetAttendace = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!req.params.id) {
+    console.log(req.body.id);
+    if (!req.body.id || !req.body.IdCurso) {
         return res.status(400).json({ msg: 'Enter the ID of the student to evaluate' });
     }
-    const attendance = yield asistencia_1.default.find({ id_alumno: req.params.id });
-    return res.status(200).json({ msg: `Student attendance with ID : ${req.params.id}`, attendance });
+    console.log(req.body.IdCurso);
+    const attendance = yield asistencia_1.default.find({ id_alumno: req.body.id, id_curso: req.body.IdCurso });
+    return res.status(200).json({ msg: `Student attendance with ID : ${req.body.id}`, attendance });
 });
 exports.GetAttendace = GetAttendace;
 function addMinutes(time, minsToAdd) {

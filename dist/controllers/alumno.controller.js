@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DeleteStudent = exports.addFingerPrint = exports.getStudentByID = exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
+exports.EditStudent = exports.DeleteStudent = exports.addFingerPrint = exports.getStudentByID = exports.getallStudents = exports.getStundetsByTeacher = exports.getallStudent = exports.SearchStudentByGrade = exports.SearchStudent = exports.NewStudent = void 0;
 const alumno_1 = __importDefault(require("../models/alumno"));
 const curso_1 = __importDefault(require("../models/curso"));
 const asistencia_1 = __importDefault(require("../models/asistencia"));
@@ -204,3 +204,27 @@ const DeleteStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     return res.status(200).json({ msg: "Eliminated Student" });
 });
 exports.DeleteStudent = DeleteStudent;
+const EditStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.body.nombrecompleto ||
+        !req.body.cedula ||
+        !req.body.gender ||
+        !req.body.age ||
+        !req.body.id_curso) {
+        return res.status(400).json({ msg: 'Make sure all the data is there' });
+    }
+    const student = yield alumno_1.default.findOne({ _id: req.body.id });
+    if (!student) {
+        return res.status(400).json({ msg: 'No student Found' });
+    }
+    const filter = { _id: req.body.id };
+    const update = {
+        nombrecompleto: req.body.nombrecompleto,
+        cedula: req.body.cedula,
+        genero: req.body.gender,
+        edad: req.body.age,
+        id_curso: req.body.id_curso,
+    };
+    const doc = yield alumno_1.default.findOneAndUpdate(filter, update);
+    return res.status(200).json({ doc, msg: "Edited Successfully" });
+});
+exports.EditStudent = EditStudent;

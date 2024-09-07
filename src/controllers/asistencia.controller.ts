@@ -50,11 +50,13 @@ export const NewAttendance = async (req: Request,res: Response): Promise<Respons
 
 //Get all students
 export const GetAttendace = async (req : Request, res: Response):Promise<Response>=>{
-    if (!req.params.id){
+    console.log(req.body.id)
+    if (!req.body.id||!req.body.IdCurso){
         return res.status(400).json({msg:'Enter the ID of the student to evaluate'})
     }
-    const attendance = await asistencia.find({id_alumno:req.params.id});
-    return res.status(200).json({msg:`Student attendance with ID : ${req.params.id}`, attendance})
+    console.log(req.body.IdCurso)
+    const attendance = await asistencia.find({id_alumno:req.body.id,id_curso:req.body.IdCurso});
+    return res.status(200).json({msg:`Student attendance with ID : ${req.body.id}`, attendance})
   }
 
 

@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {signIn,signUp } from '../controllers/user.controller';
-import { addFingerPrint, DeleteStudent, getallStudent, getallStudents, getStudentByID, getStundetsByTeacher, NewStudent,SearchStudent, SearchStudentByGrade} from "../controllers/alumno.controller";
+import { addFingerPrint, DeleteStudent, EditStudent, getallStudent, getallStudents, getStudentByID, getStundetsByTeacher, NewStudent,SearchStudent, SearchStudentByGrade} from "../controllers/alumno.controller";
 import { DeleteAttendance, GetAttendace, NewAttendance, NewAttendanceEdit } from "../controllers/asistencia.controller";
 import { DeleteGrade, EditGrade, GetGrade, getgradebystudentID, getGrades, getGradesFullData, getsections, getstudentgrade, getTeacherGrades, NewGrade } from "../controllers/curso.controller";
 import { DeleteTeacher, getallTeachers, newTeacher } from "../controllers/profesor.controller";
@@ -22,13 +22,15 @@ router.get('/searchstudent/:search',SearchStudent)
 router.get('/searchstudentbygrade/:grade/:section',SearchStudentByGrade)
 router.get('/getStundetsByTeacher/:id',getStundetsByTeacher)
 router.put('/addFingerPrint',addFingerPrint)
+router.put('/EditStudent',EditStudent)
 router.delete('/DeleteStudent/:id',DeleteStudent)
 router.get('/GetGrade/:id',GetGrade)
+
 
 //endpoints para las asistencias
 router.post('/NewAttendance',NewAttendance)
 router.post('/NewAttendanceEdit',NewAttendanceEdit)
-router.get('/GetAttendace/:id',GetAttendace)
+router.post('/GetAttendace',GetAttendace)
 router.delete('/DeleteAttendance',DeleteAttendance)
 
 //endpoints para los cursos
